@@ -138,14 +138,14 @@ class _AppTextInputState extends State<AppTextInput> {
                 color: backgroundColour,
                 borderRadius: const BorderRadius.all(
                   Radius.circular(
-                    Dimens.radiusMedium,
+                    Dimens.radiusDefault,
                   ),
                 ),
                 border: Border.all(
                   color: formstate.errorText != null
                       ? colors(context).errorColor ?? borderColour
                       : defaultBorderColor ?? borderColour,
-                  width: 1.0,
+                  width: 0.7,
                   style: BorderStyle.solid,
                 ),
               ),
@@ -162,6 +162,8 @@ class _AppTextInputState extends State<AppTextInput> {
                       decoration: InputDecoration(
                         prefixText: widget.prefixText,
                         prefixStyle: widget.typingStyle
+                            .copyWith(color: widget.labelColor ?? textColour),
+                        labelStyle: widget.typingStyle
                             .copyWith(color: widget.labelColor ?? textColour),
                         hintText:
                             widget.labelVariant == AppInputLabelVariant.hint

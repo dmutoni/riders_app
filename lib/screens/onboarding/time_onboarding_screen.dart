@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_starter_template/screens/onboarding/time_onboarding_screen.dart';
+import 'package:flutter_starter_template/screens/onboarding/car_onboarding_screen.dart';
 import 'package:flutter_starter_template/values/assets/onboarding_assets.dart';
 import 'package:flutter_starter_template/widgets/onboarding/onboarding_template.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class LocationOnboardingScreen extends ConsumerWidget {
-  static const String routeName = '/';
+class TimeOnboardingScreen extends ConsumerWidget {
+  static const String routeName = '/onboarding/timeOnboardingScreen';
 
-  const LocationOnboardingScreen({super.key});
+  const TimeOnboardingScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return OnboardingTemplate(
       appBarTitle: 'Skip',
-      sectionTitle: 'Anywhere you are',
+      sectionTitle: 'At anytime',
       sectionDescription:
           'Sell houses easily with the help of Listenoryx and to make this line big I am writing more.',
       buttonTitle: '',
       onButtonTap: () {
-        return context.go(
-          TimeOnboardingScreen.routeName,
+        context.go(
+          CarOnboardingScreen.routeName,
         );
       },
-      imageAssetPath: OnboardingAssets.locationOnboardingImage,
+      imageAssetPath: OnboardingAssets.timeOnboardingImage,
     );
   }
 }

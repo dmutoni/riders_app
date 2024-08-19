@@ -1,21 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_starter_template/enums/widget_configurations/app_top_snackbar_level.dart';
 import 'package:flutter_starter_template/enums/widget_configurations/app_top_snackbar_variant.dart';
 import 'package:flutter_starter_template/enums/widget_configurations/app_button_variant.dart';
-import 'package:flutter_starter_template/helpers/config.dart';
 import 'package:flutter_starter_template/helpers/email_validation_helper.dart';
 import 'package:flutter_starter_template/helpers/go_router_navigation_helper.dart';
 import 'package:flutter_starter_template/helpers/snackbar_helper.dart';
 import 'package:flutter_starter_template/repository/auth_repository.dart';
-import 'package:flutter_starter_template/theme/theme_constants.dart';
-import 'package:flutter_starter_template/theme/theme_manager.dart';
-import 'package:flutter_starter_template/values/assets/login_assets.dart';
+import 'package:flutter_starter_template/screens/authentication/login_screen.dart';
 import 'package:flutter_starter_template/values/colors.dart';
 import 'package:flutter_starter_template/values/dimens.dart';
 import 'package:flutter_starter_template/widgets/common/input/app_text_input.dart';
 import 'package:flutter_starter_template/widgets/common/input/app_button.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intersperse/intersperse.dart';
@@ -23,6 +20,8 @@ import 'package:intersperse/intersperse.dart';
 enum InputLabelVariant { label, hint }
 
 class SignupScreen extends ConsumerStatefulWidget {
+  static const String routeName = '/signupScreen';
+
   const SignupScreen({
     super.key,
   });
@@ -32,11 +31,12 @@ class SignupScreen extends ConsumerStatefulWidget {
 }
 
 class _SignupScreenState extends ConsumerState<SignupScreen> {
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  bool _isShowingPassword = true;
+  final bool _isShowingPassword = true;
 
   @override
   void initState() {
@@ -45,6 +45,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -52,259 +53,316 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var isDarkMode = ref.watch(themeModeProvider);
     var auth = ref.watch(authenticationProvider);
 
+    final TextEditingController controller = TextEditingController();
+    String? selectedValue;
+    final List<String> options = ['Option 1', 'Option 2', 'Option 3'];
+
     return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.only(
-                left: 20.0,
-                right: 20.0,
-              ),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: GestureDetector(
+            onTap: () => context.pop(),
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.arrow_back_ios,
+                  color: ThemeColors.grey,
+                  size: 25,
+                ),
+                Text(
+                  'Back',
+                )
+              ],
+            ),
+          ),
+        ),
+        leadingWidth: 100,
+      ),
+      body: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.only(
+              left: 20.0,
+              right: 20.0,
+            ),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Sign up with your email or phone number',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ...intersperse(
                     const SizedBox(
-                      height: 50,
+                      height: Dimens.marginSmall,
                     ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: IconButton(
-                        onPressed: () {
-                          ref.read(themeModeProvider.notifier).state =
-                              isDarkMode ? false : true;
+                    [
+                      AppTextInput(
+                        controller: _nameController,
+                        labelColor: ThemeColors.lightGrey,
+                        label: 'Name',
+                        validator: (value) {
+                          if (value!.isEmpty) return 'Name is required';
+                          return null;
                         },
-                        icon: Icon(
-                          isDarkMode ? Icons.light_mode : Icons.dark_mode,
-                          color: isDarkMode
-                              ? ThemeColors.white
-                              : ThemeColors.black,
-                        ),
+                        validateOnInput: true,
                       ),
-                    ),
-                    Center(
-                      child: SvgPicture.asset(
-                        LoginAssets.teddyBear,
-                        height: 100,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Center(
-                      child: Text(
-                        'Become a member',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                          color: colors(context).textColor,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    ...intersperse(
                       const SizedBox(
-                        height: Dimens.marginSmall,
+                        height: 5,
                       ),
-                      [
-                        Text(
-                          'E-mail address',
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                        AppTextInput(
-                          controller: _emailController,
-                          trailingWidgetOverride: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.email_outlined,
-                            ),
-                          ),
-                          label: 'Enter your email',
-                          validator: (value) {
-                            if (value!.isEmpty) return 'Email is required';
-                            if (!isEmailValid(value)) {
-                              return 'Please enter a valid email';
-                            }
-
-                            return null;
-                          },
-                          validateOnInput: true,
-                        ),
-                        Text(
-                          'Password',
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                        AppTextInput(
-                          obscureText: _isShowingPassword,
-                          controller: _passwordController,
-                          trailingWidgetOverride: IconButton(
-                            onPressed: () => setState(
-                              () => _isShowingPassword = !_isShowingPassword,
-                            ),
-                            icon: _isShowingPassword
-                                ? const Icon(
-                                    Icons.visibility_outlined,
-                                  )
-                                : const Icon(
-                                    Icons.visibility_off_outlined,
+                      AppTextInput(
+                        controller: _emailController,
+                        label: 'Email',
+                        validator: (value) {
+                          if (value!.isEmpty) return 'Email is required';
+                          if (!isEmailValid(value)) {
+                            return 'Email is invalid';
+                          }
+                          return null;
+                        },
+                        validateOnInput: true,
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      AppTextInput(
+                        obscureText: _isShowingPassword,
+                        controller: _passwordController,
+                        label: 'Email',
+                        validator: (value) {
+                          if (value!.isEmpty) return 'Password is required';
+                          if (value.length < 6) {
+                            return 'Password must be at least 6 characters';
+                          }
+                          return null;
+                        },
+                        validateOnInput: true,
+                      ),
+                      TextFormField(
+                        controller: controller,
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          labelText: 'Select an option',
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.arrow_drop_down),
+                            onPressed: () async {
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => FullScreenDropdown(
+                                    options: options,
+                                    selectedValue: selectedValue,
                                   ),
+                                ),
+                              );
+                              if (result != null) {
+                                setState(() {
+                                  selectedValue = result;
+                                  controller.text = result;
+                                });
+                              }
+                            },
                           ),
-                          label: 'Enter your password',
-                          validator: (value) {
-                            if (value!.isEmpty) return 'Password is required';
-                            if (value.length < 6) {
-                              return 'Password must be at least 6 characters';
-                            }
-                            return null;
-                          },
-                          validateOnInput: true,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              height: 1.0,
-                              width: 150.0,
-                              color: ThemeColors.grey,
+                      ),
+                      DropdownButtonFormField<String>(
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8.0),
                             ),
-                            Text(
-                              'Or',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                            Container(
-                              height: 1.0,
-                              width: 150.0,
-                              color: ThemeColors.grey,
-                            ),
-                          ],
+                          ),
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 16.0),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            AppButton(
-                              title: '',
-                              onTap: () async {
-                                try {
-                                  await ref
-                                      .read(authenticationProvider.notifier)
-                                      .signInWithGoogle();
-                                } catch (e) {}
-                              },
-                              variant: AppButtonVariant.light,
-                              leadingWidget: SvgPicture.asset(
-                                LoginAssets.googleLogo,
-                                height: 15.0,
-                                width: 15.0,
-                              ),
-                              width: 60.0,
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            AppButton(
-                              title: '',
-                              onTap: () {},
-                              variant: AppButtonVariant.light,
-                              leadingWidget: const Icon(
-                                Icons.apple,
-                                color: ThemeColors.black,
-                              ),
-                              width: 60.0,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 150,
-                    ),
-                    AppButton(
-                      title: 'Sign up',
-                      isLoading: auth.isLoading,
-                      onTap: () async {
-                        try {
-                          if (!_formKey.currentState!.validate()) return;
-
-                          await ref
-                              .read(authenticationProvider.notifier)
-                              .signUpWithEmailAndPassword(
-                                  email: _emailController.text,
-                                  password: _passwordController.text);
-
-                          ref.read(routerProvider).go('/loginScreen');
-                          SnackbarHelper.showSnackbar(
-                            message:
-                                'Account created successfully! Please login.',
-                            level: AppTopSnackbarLevel.alert,
-                            variant: AppTopSnackbarVariant.message,
-                            context: context,
-                          );
-                        } on FirebaseAuthException catch (e) {
-                          Map<String, String> errorMessages = {
-                            'email-already-in-use':
-                                'Email has already been used. Please use another email.',
-                            'invalid-email': 'Invalid email used',
-                            'weak-password': 'Password is too weak',
-                          };
-
-                          String message = errorMessages[e.code] ??
-                              'Something went wrong. Please try again.';
-
-                          SnackbarHelper.showSnackbar(
-                            message: message,
-                            level: AppTopSnackbarLevel.alert,
-                            variant: AppTopSnackbarVariant.error,
-                            context: context,
-                          );
-                        }
-                      },
-                      variant: AppButtonVariant.dark,
-                    ),
-                    const SizedBox(
-                      height: 18.0,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        context.go(
-                          AppRoutes.loginScreenRouteName,
-                        );
-                      },
-                      child: Center(
+                        value: selectedValue,
+                        items: [
+                          'Male',
+                          'Female',
+                        ]
+                            .map((option) => DropdownMenuItem(
+                                  value: option,
+                                  child: Text(option),
+                                ))
+                            .toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedValue = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Icon(
+                        Icons.check_circle_outline,
+                        color: ThemeColors.green2,
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
                         child: RichText(
+                          overflow:
+                              TextOverflow.visible, // Or TextOverflow.fade
                           text: TextSpan(
-                            text: 'Already have an account? ',
+                            text: 'By signing up. You agree to the ',
                             style: Theme.of(context).textTheme.bodySmall,
-                            children: [
+                            children: <TextSpan>[
                               TextSpan(
-                                text: 'Sign in.',
+                                text: 'Terms of service ',
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodySmall
                                     ?.copyWith(
-                                      color: ThemeColors.blue,
-                                      fontWeight: FontWeight.w700,
+                                      color: ThemeColors.green3,
+                                    ),
+                              ),
+                              TextSpan(
+                                text: 'and ',
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                              TextSpan(
+                                text:
+                                    'Privacy policy.', // Default style for the rest
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
+                                      color: ThemeColors.green,
                                     ),
                               ),
                             ],
                           ),
                         ),
                       ),
+                    ],
+                  ),
+                  AppButton(
+                    title: 'Sign up',
+                    isLoading: auth.isLoading,
+                    onTap: () async {
+                      try {
+                        if (!_formKey.currentState!.validate()) return;
+
+                        await ref
+                            .read(authenticationProvider.notifier)
+                            .signUpWithEmailAndPassword(
+                                email: _emailController.text,
+                                password: _passwordController.text);
+
+                        ref.read(routerProvider).go('/loginScreen');
+                        SnackbarHelper.showSnackbar(
+                          message:
+                              'Account created successfully! Please login.',
+                          level: AppTopSnackbarLevel.alert,
+                          variant: AppTopSnackbarVariant.message,
+                          context: context,
+                        );
+                      } on FirebaseAuthException catch (e) {
+                        Map<String, String> errorMessages = {
+                          'email-already-in-use':
+                              'Email has already been used. Please use another email.',
+                          'invalid-email': 'Invalid email used',
+                          'weak-password': 'Password is too weak',
+                        };
+
+                        String message = errorMessages[e.code] ??
+                            'Something went wrong. Please try again.';
+
+                        SnackbarHelper.showSnackbar(
+                          message: message,
+                          level: AppTopSnackbarLevel.alert,
+                          variant: AppTopSnackbarVariant.error,
+                          context: context,
+                        );
+                      }
+                    },
+                    variant: AppButtonVariant.dark,
+                  ),
+                  const SizedBox(
+                    height: 18.0,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      context.go(
+                        LoginScreen.routeName,
+                      );
+                    },
+                    child: Center(
+                      child: RichText(
+                        text: TextSpan(
+                          text: 'Already have an account? ',
+                          style: Theme.of(context).textTheme.bodySmall,
+                          children: [
+                            TextSpan(
+                              text: 'Sign in.',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(
+                                    color: ThemeColors.blue,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class FullScreenDropdown extends StatelessWidget {
+  final List<String> options;
+  final String? selectedValue;
+
+  const FullScreenDropdown(
+      {super.key, required this.options, this.selectedValue});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Select an Option'),
+      ),
+      body: ListView.builder(
+        itemCount: options.length,
+        itemBuilder: (context, index) {
+          final option = options[index];
+          return ListTile(
+            title: Text(option),
+            selected: option == selectedValue,
+            onTap: () {
+              Navigator.pop(context, option);
+            },
+          );
+        },
       ),
     );
   }

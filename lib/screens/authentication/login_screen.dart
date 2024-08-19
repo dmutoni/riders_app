@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_starter_template/enums/widget_configurations/app_button_variant.dart';
 import 'package:flutter_starter_template/enums/widget_configurations/app_top_snackbar_level.dart';
 import 'package:flutter_starter_template/enums/widget_configurations/app_top_snackbar_variant.dart';
-import 'package:flutter_starter_template/helpers/config.dart';
 import 'package:flutter_starter_template/helpers/email_validation_helper.dart';
 import 'package:flutter_starter_template/helpers/snackbar_helper.dart';
 import 'package:flutter_starter_template/repository/auth_repository.dart';
+import 'package:flutter_starter_template/screens/authentication/signup_screen.dart';
 import 'package:flutter_starter_template/theme/theme_constants.dart';
 import 'package:flutter_starter_template/theme/theme_manager.dart';
 import 'package:flutter_starter_template/values/assets/login_assets.dart';
@@ -22,6 +22,8 @@ import 'package:intersperse/intersperse.dart';
 enum InputLabelVariant { label, hint }
 
 class LoginScreen extends ConsumerStatefulWidget {
+  static const String routeName = '/loginScreen';
+
   const LoginScreen({
     super.key,
   });
@@ -262,7 +264,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     GestureDetector(
                       onTap: () {
                         context.go(
-                          AppRoutes.signupScreenRouteName,
+                          SignupScreen.routeName,
                         );
                       },
                       child: Center(

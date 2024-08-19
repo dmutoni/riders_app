@@ -6,6 +6,8 @@ import 'package:flutter_starter_template/screens/authentication/login_screen.dar
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class AuthChecker extends ConsumerWidget {
+  static const String routeName = '/authChecker';
+
   const AuthChecker({
     Key? key,
   }) : super(key: key);

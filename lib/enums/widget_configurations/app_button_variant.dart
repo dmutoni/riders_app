@@ -9,7 +9,7 @@ extension AppButtonVariantContent on AppButtonVariant {
       case AppButtonVariant.dark:
         return ThemeColors.white;
       case AppButtonVariant.light:
-        return ThemeColors.black;
+        return ThemeColors.primaryColor;
     }
   }
 
@@ -18,7 +18,7 @@ extension AppButtonVariantContent on AppButtonVariant {
       case AppButtonVariant.dark:
         return ThemeColors.primaryColor;
       case AppButtonVariant.light:
-        return ThemeColors.lightGrey;
+        return ThemeColors.white;
     }
   }
 
@@ -43,9 +43,9 @@ extension AppButtonVariantContent on AppButtonVariant {
   Color get borderColor {
     switch (this) {
       case AppButtonVariant.dark:
-        return ThemeColors.black;
+        return ThemeColors.primaryColor;
       case AppButtonVariant.light:
-        return ThemeColors.grey;
+        return ThemeColors.primaryColor;
     }
   }
 }

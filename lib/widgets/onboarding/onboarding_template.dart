@@ -6,21 +6,23 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class OnboardingTemplate extends ConsumerWidget {
-  final String appBarTitle;
-  final String sectionTitle;
-  final String sectionDescription;
-  final String buttonTitle;
+  final String? appBarTitle;
+  final String? sectionTitle;
+  final String? sectionDescription;
+  final String? buttonTitle;
   final VoidCallback onButtonTap;
   final String? imageAssetPath;
+  final bool? isLastScreen;
 
   const OnboardingTemplate({
     Key? key,
-    required this.appBarTitle,
-    required this.sectionTitle,
-    required this.sectionDescription,
-    required this.buttonTitle,
+    this.appBarTitle,
+    this.sectionTitle,
+    this.sectionDescription,
+    this.buttonTitle,
     required this.onButtonTap,
     this.imageAssetPath,
+    this.isLastScreen,
   }) : super(key: key);
 
   @override
@@ -33,7 +35,7 @@ class OnboardingTemplate extends ConsumerWidget {
             padding: const EdgeInsets.all(8.0),
             child: GestureDetector(
               child: Text(
-                'Skip',
+                appBarTitle ?? '',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       letterSpacing: 1.0,
                       fontSize: 16,
@@ -58,7 +60,7 @@ class OnboardingTemplate extends ConsumerWidget {
             height: Dimens.marginMiddle,
           ),
           Text(
-            sectionTitle,
+            sectionTitle ?? '',
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
                   fontWeight: FontWeight.w500,
                   fontSize: 24,
@@ -73,7 +75,7 @@ class OnboardingTemplate extends ConsumerWidget {
               horizontal: 70,
             ),
             child: Text(
-              sectionDescription,
+              sectionDescription ?? '',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodySmall,
             ),
@@ -94,14 +96,28 @@ class OnboardingTemplate extends ConsumerWidget {
                 color: ThemeColors.green,
                 shape: BoxShape.circle,
               ),
-              child: IconButton(
-                icon: const Icon(
-                  Icons.arrow_forward,
-                  color: ThemeColors.white,
-                ),
-                onPressed: onButtonTap,
-                color: ThemeColors.white,
-              ),
+              child: (isLastScreen ?? false)
+                  ? GestureDetector(
+                      onTap: onButtonTap,
+                      child: Center(
+                        child: Text(
+                          'Go',
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    color: ThemeColors.white,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                        ),
+                      ),
+                    )
+                  : IconButton(
+                      icon: const Icon(
+                        Icons.arrow_forward,
+                        color: ThemeColors.white,
+                      ),
+                      onPressed: onButtonTap,
+                      color: ThemeColors.white,
+                    ),
             ),
           )
         ],

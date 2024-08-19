@@ -32,6 +32,12 @@ ThemeData getAppTheme({
     brightness: Brightness.light,
     primaryColor: colorPrimary,
     textTheme: TextTheme(
+      titleLarge: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.w500,
+        color: isDarkTheme ? ThemeColors.white : ThemeColors.grey,
+        height: 30 / 24,
+      ),
       headlineMedium: TextStyle(
         fontSize: 14.0,
         fontWeight: FontWeight.w500,
@@ -48,9 +54,11 @@ ThemeData getAppTheme({
         color: isDarkTheme ? ThemeColors.white : ThemeColors.lightGrey,
       ),
       bodyMedium: TextStyle(
-        fontSize: 15,
-        fontWeight: FontWeight.w600,
-        color: isDarkTheme ? ThemeColors.white : ThemeColors.black,
+        fontSize: Dimens.marginDefault,
+        fontWeight: FontWeight.w400,
+        color: isDarkTheme ? ThemeColors.white : ThemeColors.lightGrey,
+        wordSpacing: 1.5,
+        height: 24 / 16,
       ),
       labelLarge: TextStyle(
         fontSize: Dimens.marginLarge,

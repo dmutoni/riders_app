@@ -4,4 +4,5 @@ abstract class OnboardingAssets {
       'assets/images/onboarding/location.svg';
   static const String timeOnboardingImage = 'assets/images/onboarding/time.svg';
   static const String arrowLeft = 'assets/images/onboarding/arrow_left.svg';
+  static const String welcomeImage = 'assets/images/onboarding/welcome.svg';
 }

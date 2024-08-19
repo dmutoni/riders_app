@@ -61,9 +61,9 @@ extension AppInputVariantValues on AppInputVariant {
   Color get borderColor {
     switch (this) {
       case AppInputVariant.dark:
-        return ThemeColors.darkGrey;
+        return ThemeColors.lightGrey;
       case AppInputVariant.light:
-        return ThemeColors.grey;
+        return ThemeColors.lightGrey;
       case AppInputVariant.clear:
         return ThemeColors.lightGrey;
       case AppInputVariant.search:
@@ -74,9 +74,9 @@ extension AppInputVariantValues on AppInputVariant {
   Color get selectedBorderColor {
     switch (this) {
       case AppInputVariant.dark:
-        return ThemeColors.darkGrey;
+        return ThemeColors.lightGrey;
       case AppInputVariant.light:
-        return ThemeColors.grey;
+        return ThemeColors.lightGrey;
       case AppInputVariant.clear:
         return ThemeColors.lightGrey;
       case AppInputVariant.search:
