@@ -1,32 +1,16 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_starter_template/enums/widget_configurations/app_button_variant.dart';
-import 'package:flutter_starter_template/enums/widget_configurations/app_top_snackbar_level.dart';
-import 'package:flutter_starter_template/enums/widget_configurations/app_top_snackbar_variant.dart';
-import 'package:flutter_starter_template/helpers/email_validation_helper.dart';
-import 'package:flutter_starter_template/helpers/snackbar_helper.dart';
-import 'package:flutter_starter_template/repository/auth_repository.dart';
-import 'package:flutter_starter_template/screens/authentication/signup_screen.dart';
-import 'package:flutter_starter_template/theme/theme_constants.dart';
-import 'package:flutter_starter_template/theme/theme_manager.dart';
-import 'package:flutter_starter_template/values/assets/login_assets.dart';
+import 'package:flutter_starter_template/enums/widget_configurations/app_input_variant.dart';
+import 'package:flutter_starter_template/theme/styles.dart';
 import 'package:flutter_starter_template/values/colors.dart';
-import 'package:flutter_starter_template/values/dimens.dart';
-import 'package:flutter_starter_template/widgets/common/input/app_text_input.dart';
 import 'package:flutter_starter_template/widgets/common/input/app_button.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_starter_template/widgets/common/input/app_text_input.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intersperse/intersperse.dart';
-
-enum InputLabelVariant { label, hint }
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
-  static const String routeName = '/loginScreen';
+  static const String routeName = '/login';
 
-  const LoginScreen({
-    super.key,
-  });
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
@@ -35,14 +19,7 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  bool _isShowingPassword = true;
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  bool _isShowingPassword = false;
 
   @override
   void dispose() {
@@ -53,244 +30,103 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var isDarkMode = ref.watch(themeModeProvider);
-    var auth = ref.watch(authenticationProvider);
-
     return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: ListView(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: GestureDetector(
+          onTap: () => context.pop(),
+          child: const Row(
+            children: [
+              Icon(Icons.arrow_back_ios, color: Colors.black),
+              Text('Back', style: TextStyle(color: Colors.black)),
+            ],
+          ),
+        ),
+        leadingWidth: 100,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              padding: const EdgeInsets.only(
-                left: 20.0,
-                right: 20.0,
-              ),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 25,
-                    ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: IconButton(
-                        onPressed: () {
-                          ref.read(themeModeProvider.notifier).state =
-                              isDarkMode ? false : true;
-                        },
-                        icon: Icon(
-                          isDarkMode ? Icons.light_mode : Icons.dark_mode,
-                          color: isDarkMode
-                              ? ThemeColors.white
-                              : ThemeColors.black,
-                        ),
-                      ),
-                    ),
-                    Center(
-                      child: SvgPicture.asset(
-                        LoginAssets.teddyBear,
-                        height: 100,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Center(
-                      child: Text(
-                        'Welcome back!',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                          color: colors(context).textColor,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    ...intersperse(
-                      const SizedBox(
-                        height: Dimens.marginSmall,
-                      ),
-                      [
-                        Text(
-                          'E-mail address',
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                        AppTextInput(
-                          controller: _emailController,
-                          trailingWidgetOverride: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.email_outlined,
-                            ),
-                          ),
-                          label: 'Enter your email',
-                          validator: (value) {
-                            if (value!.isEmpty) return 'Email is required';
-                            if (!isEmailValid(value)) {
-                              return 'Please enter a valid email';
-                            }
-
-                            return null;
-                          },
-                          validateOnInput: true,
-                        ),
-                        Text(
-                          'Password',
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                        AppTextInput(
-                          obscureText: _isShowingPassword,
-                          controller: _passwordController,
-                          trailingWidgetOverride: IconButton(
-                            onPressed: () => setState(
-                              () => _isShowingPassword = !_isShowingPassword,
-                            ),
-                            icon: _isShowingPassword
-                                ? const Icon(
-                                    Icons.visibility_outlined,
-                                  )
-                                : const Icon(
-                                    Icons.visibility_off_outlined,
-                                  ),
-                          ),
-                          label: 'Enter your password',
-                          validator: (value) =>
-                              value!.isEmpty ? 'Password is required' : null,
-                          validateOnInput: true,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              height: 1.0,
-                              width: 150.0,
-                              color: ThemeColors.grey,
-                            ),
-                            Text(
-                              'Or',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                            Container(
-                              height: 1.0,
-                              width: 150.0,
-                              color: ThemeColors.grey,
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            AppButton(
-                              title: '',
-                              onTap: () {
-                                ref
-                                    .read(authenticationProvider.notifier)
-                                    .signInWithGoogle();
-                              },
-                              variant: AppButtonVariant.light,
-                              leadingWidget: SvgPicture.asset(
-                                LoginAssets.googleLogo,
-                                height: 15.0,
-                                width: 15.0,
-                              ),
-                              width: 60.0,
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            AppButton(
-                              title: '',
-                              onTap: () {},
-                              variant: AppButtonVariant.light,
-                              leadingWidget: const Icon(
-                                Icons.apple,
-                                color: ThemeColors.black,
-                              ),
-                              width: 60.0,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 150,
-                    ),
-                    AppButton(
-                      title: 'Log in',
-                      isLoading: auth.isLoading,
-                      onTap: () async {
-                        if (!_formKey.currentState!.validate()) return;
-                        try {
-                          await ref
-                              .read(authenticationProvider.notifier)
-                              .signInWithEmailAndPassword(
-                                  email: _emailController.text,
-                                  password: _passwordController.text);
-                        } on FirebaseAuthException catch (e) {
-                          Map<String, String> errorMessages = {
-                            'INVALID_LOGIN_CREDENTIALS': 'Invalid credentials',
-                            'USER_DISABLED': 'User is disabled',
-                            'INVALID_EMAIL': 'Invalid email',
-                            'INVALID_PASSWORD': 'Invalid password',
-                          };
-
-                          String message =
-                              errorMessages[e.code] ?? 'Something went wrong';
-
-                          SnackbarHelper.showSnackbar(
-                            message: message,
-                            level: AppTopSnackbarLevel.alert,
-                            variant: AppTopSnackbarVariant.error,
-                            context: context,
-                          );
-                        }
-                        return;
-                      },
-                      variant: AppButtonVariant.dark,
-                      actionIcon: const Icon(
-                        Icons.arrow_right_alt,
-                        color: ThemeColors.white,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 18.0,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        context.go(
-                          SignupScreen.routeName,
-                        );
-                      },
-                      child: Center(
-                        child: RichText(
-                          text: TextSpan(
-                            text: 'Don\'t have an account? ',
-                            style: Theme.of(context).textTheme.bodySmall,
-                            children: [
-                              TextSpan(
-                                text: 'Sign up now.',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
-                                      color: ThemeColors.blue,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+            const SizedBox(height: 20),
+            Text(
+              'Sign in with your email or phone number',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 30),
+            AppTextInput(
+              controller: _emailController,
+              label: 'Enter email or phone number',
+              keyboardType: TextInputType.emailAddress,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Email or Phone Number is required';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 20),
+            AppTextInput(
+              controller: _passwordController,
+              obscureText: !_isShowingPassword,
+              label: 'Enter your password',
+              trailingWidgetOverride: IconButton(
+                icon: Icon(
+                  _isShowingPassword ? Icons.visibility : Icons.visibility_off,
                 ),
+                onPressed: () {
+                  setState(() {
+                    _isShowingPassword = !_isShowingPassword;
+                  });
+                },
               ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Password is required';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 10),
+            const Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                'Forget password?',
+                style: Styles.errorTextStyleRed,
+              ),
+            ),
+            const SizedBox(height: 20),
+            AppButton(title: 'Sign up', onTap: () {}),
+            const SizedBox(height: 20),
+            const Row(
+              children: [
+                Expanded(child: Divider(color: Colors.grey)),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Text('or'),
+                ),
+                Expanded(child: Divider(color: Colors.grey)),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Don't have an account?",
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: ThemeColors.grey,
+                      ),
+                ),
+                Text(
+                  'Sign Up ',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: ThemeColors.primaryColor,
+                      ),
+                ),
+              ],
             ),
           ],
         ),

@@ -1,14 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_starter_template/enums/widget_configurations/app_top_snackbar_level.dart';
 import 'package:flutter_starter_template/enums/widget_configurations/app_top_snackbar_variant.dart';
 import 'package:flutter_starter_template/enums/widget_configurations/app_button_variant.dart';
 import 'package:flutter_starter_template/helpers/email_validation_helper.dart';
-import 'package:flutter_starter_template/helpers/go_router_navigation_helper.dart';
 import 'package:flutter_starter_template/helpers/snackbar_helper.dart';
 import 'package:flutter_starter_template/repository/auth_repository.dart';
 import 'package:flutter_starter_template/screens/authentication/login_screen.dart';
+import 'package:flutter_starter_template/screens/authentication/phone_verification_screen.dart';
 import 'package:flutter_starter_template/values/colors.dart';
 import 'package:flutter_starter_template/values/dimens.dart';
 import 'package:flutter_starter_template/widgets/common/input/app_text_input.dart';
@@ -84,7 +83,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
         ),
         leadingWidth: 100,
       ),
-      body: Column(
+      body: ListView(
+        shrinkWrap: true,
         children: [
           Container(
             padding: const EdgeInsets.only(
@@ -256,27 +256,17 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                       ),
                     ],
                   ),
+                  const SizedBox(
+                    height: 40.0,
+                  ),
                   AppButton(
                     title: 'Sign up',
                     isLoading: auth.isLoading,
                     onTap: () async {
                       try {
-                        if (!_formKey.currentState!.validate()) return;
+                        // if (!_formKey.currentState!.validate()) return;
 
-                        await ref
-                            .read(authenticationProvider.notifier)
-                            .signUpWithEmailAndPassword(
-                                email: _emailController.text,
-                                password: _passwordController.text);
-
-                        ref.read(routerProvider).go('/loginScreen');
-                        SnackbarHelper.showSnackbar(
-                          message:
-                              'Account created successfully! Please login.',
-                          level: AppTopSnackbarLevel.alert,
-                          variant: AppTopSnackbarVariant.message,
-                          context: context,
-                        );
+                        context.go(PhoneVerificationScreen.routeName);
                       } on FirebaseAuthException catch (e) {
                         Map<String, String> errorMessages = {
                           'email-already-in-use':
@@ -301,6 +291,23 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   const SizedBox(
                     height: 18.0,
                   ),
+                  const Row(
+                    children: [
+                      Expanded(
+                        child: Divider(),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Text('or'),
+                      ),
+                      Expanded(
+                        child: Divider(),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 80,
+                  ),
                   GestureDetector(
                     onTap: () {
                       context.go(
@@ -311,7 +318,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                       child: RichText(
                         text: TextSpan(
                           text: 'Already have an account? ',
-                          style: Theme.of(context).textTheme.bodySmall,
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: ThemeColors.grey2,
+                                  ),
                           children: [
                             TextSpan(
                               text: 'Sign in.',
@@ -319,7 +329,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                   .textTheme
                                   .bodySmall
                                   ?.copyWith(
-                                    color: ThemeColors.blue,
+                                    color: ThemeColors.primaryColor,
                                     fontWeight: FontWeight.w700,
                                   ),
                             ),

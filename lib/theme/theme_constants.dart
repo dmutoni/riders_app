@@ -39,7 +39,7 @@ ThemeData getAppTheme({
         height: 30 / 24,
       ),
       headlineMedium: TextStyle(
-        fontSize: 14.0,
+        fontSize: 24.0,
         fontWeight: FontWeight.w500,
         color: isDarkTheme ? ThemeColors.white : ThemeColors.black,
       ),
@@ -64,6 +64,11 @@ ThemeData getAppTheme({
         fontSize: Dimens.marginLarge,
         fontWeight: FontWeight.w500,
         color: isDarkTheme ? ThemeColors.white : ThemeColors.black,
+      ),
+      displaySmall: TextStyle(
+        fontSize: Dimens.marginFourteen,
+        fontWeight: FontWeight.w400,
+        color: isDarkTheme ? ThemeColors.white : ThemeColors.grey2,
       ),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(

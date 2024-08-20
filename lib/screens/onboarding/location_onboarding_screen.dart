@@ -13,6 +13,7 @@ class LocationOnboardingScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return OnboardingTemplate(
+      onboardingProgress: 0.3,
       appBarTitle: 'Skip',
       sectionTitle: 'Anywhere you are',
       sectionDescription:

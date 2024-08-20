@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_starter_template/screens/authentication/login_screen.dart';
+import 'package:flutter_starter_template/screens/authentication/phone_verification_screen.dart';
+import 'package:flutter_starter_template/screens/authentication/set_new_password.dart';
 import 'package:flutter_starter_template/screens/authentication/signup_screen.dart';
 import 'package:flutter_starter_template/screens/authentication/welcome_screen.dart';
 import 'package:flutter_starter_template/screens/common/error_screen.dart';
@@ -44,7 +46,7 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: 'login',
           path: LoginScreen.routeName,
-          builder: (context, state) => const AuthChecker(),
+          builder: (context, state) => const LoginScreen(),
         ),
         GoRoute(
           name: 'home',
@@ -71,6 +73,16 @@ final routerProvider = Provider<GoRouter>(
           path: WelcomeScreen.routeName,
           builder: (context, state) => const WelcomeScreen(),
         ),
+        GoRoute(
+          name: 'phoneVerificationScreen',
+          path: PhoneVerificationScreen.routeName,
+          builder: (context, state) => const PhoneVerificationScreen(),
+        ),
+        GoRoute(
+          name: 'setNewPasswordScreen',
+          path: SetNewPassword.routeName,
+          builder: (context, state) => const SetNewPassword(),
+        )
       ],
       errorBuilder: (context, state) => const ErrorScreen(),
       // redirect: (context, state) {

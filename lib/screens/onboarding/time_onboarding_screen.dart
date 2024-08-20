@@ -13,6 +13,7 @@ class TimeOnboardingScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return OnboardingTemplate(
+      onboardingProgress: 0.7,
       appBarTitle: 'Skip',
       sectionTitle: 'At anytime',
       sectionDescription:

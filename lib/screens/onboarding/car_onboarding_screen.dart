@@ -13,6 +13,7 @@ class CarOnboardingScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return OnboardingTemplate(
+      onboardingProgress: 1,
       isLastScreen: true,
       appBarTitle: '',
       sectionTitle: 'Book your car',

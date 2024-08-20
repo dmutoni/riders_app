@@ -13,6 +13,7 @@ class OnboardingTemplate extends ConsumerWidget {
   final VoidCallback onButtonTap;
   final String? imageAssetPath;
   final bool? isLastScreen;
+  final double? onboardingProgress;
 
   const OnboardingTemplate({
     Key? key,
@@ -23,6 +24,7 @@ class OnboardingTemplate extends ConsumerWidget {
     required this.onButtonTap,
     this.imageAssetPath,
     this.isLastScreen,
+    this.onboardingProgress,
   }) : super(key: key);
 
   @override
@@ -84,7 +86,7 @@ class OnboardingTemplate extends ConsumerWidget {
             height: 200,
           ),
           TwoColorCircleProgressIndicator(
-            progress: Dimens.onboardingThirtyProgress,
+            progress: onboardingProgress ?? 0.0,
             color1: ThemeColors.green,
             color2: ThemeColors.lightGreen,
             size: 86,

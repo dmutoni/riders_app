@@ -6,8 +6,8 @@ abstract class Styles {
 
   static const TextStyle errorTextStyleRed = TextStyle(
     fontFamily: _poppins,
-    fontSize: 10.0,
-    fontWeight: FontWeight.w400,
+    fontSize: 14.0,
+    fontWeight: FontWeight.w500,
     height: 14.0 / 10.0,
     color: ThemeColors.darkRed,
   );
