@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_starter_template/repository/auth_repository.dart';
 import 'package:flutter_starter_template/screens/common/error_screen.dart';
-import 'package:flutter_starter_template/screens/home_screen.dart';
 import 'package:flutter_starter_template/screens/authentication/login_screen.dart';
+import 'package:flutter_starter_template/screens/home/home_screen.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class AuthChecker extends ConsumerWidget {

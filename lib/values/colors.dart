@@ -12,12 +12,14 @@ abstract class ThemeColors {
   static const darkRed = Color(0xFFe53935);
   static const orangePrimaryColor = Color(0xFFFFA500);
   static const green = Color(0xFF08B784);
+  static const lightGreen = Color(0xFFB4E7D1);
   static const green2 = Color(0xFF599e55);
   static const green3 = Color(0xFF08B783);
+  static const green4 = Color(0xFFB9E5D1);
+  static const green5 = Color(0xFFE2F5ED);
   static const grey = Color(0xFF414141);
   static const grey2 = Color(0xFF5A5A5A);
   static const blue = Color(0xFF2364E1);
-  static const lightGreen = Color(0xFFB4E7D1);
 }
 
 @immutable

@@ -55,7 +55,9 @@ class AppButton extends StatelessWidget {
           color: variant.borderColor,
           width: 1.0,
         ),
-        borderRadius: BorderRadius.circular(Dimens.radiusMedium),
+        borderRadius: BorderRadius.circular(
+          Dimens.radiusDefault,
+        ),
       ),
       child: Material(
         color: Colors.transparent,

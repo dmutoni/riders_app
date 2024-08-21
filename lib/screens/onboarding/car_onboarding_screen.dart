@@ -21,7 +21,7 @@ class CarOnboardingScreen extends ConsumerWidget {
           'Sell houses easily with the help of Listenoryx and to make this line big I am writing more.',
       buttonTitle: '',
       onButtonTap: () {
-        context.go(
+        context.pushNamed(
           WelcomeScreen.routeName,
         );
       },

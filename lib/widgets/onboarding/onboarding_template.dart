@@ -30,100 +30,112 @@ class OnboardingTemplate extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        actions: [
+      appBar: _buildAppBar(context),
+      body: _buildBody(context),
+    );
+  }
+
+  AppBar _buildAppBar(BuildContext context) {
+    return AppBar(
+      automaticallyImplyLeading: false,
+      backgroundColor: Colors.transparent,
+      actions: [
+        if (appBarTitle != null)
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: GestureDetector(
+              onTap: onButtonTap,
               child: Text(
-                appBarTitle ?? '',
+                appBarTitle!,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       letterSpacing: 1.0,
                       fontSize: 16,
                       color: ThemeColors.grey,
                     ),
               ),
-              onTap: () => onButtonTap(),
             ),
           ),
-        ],
+      ],
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
+    return Column(
+      children: [
+        const SizedBox(height: Dimens.marginSeventy),
+        if (imageAssetPath != null) SvgPicture.asset(imageAssetPath!),
+        const SizedBox(height: Dimens.marginMiddle),
+        _buildSectionTitle(context),
+        const SizedBox(height: Dimens.marginTen),
+        _buildSectionDescription(context),
+        const Spacer(),
+        _buildProgressIndicator(context),
+        const SizedBox(height: 80),
+      ],
+    );
+  }
+
+  Widget _buildSectionTitle(BuildContext context) {
+    return Text(
+      sectionTitle ?? '',
+      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+            fontWeight: FontWeight.w500,
+            fontSize: 24,
+            color: ThemeColors.grey,
+          ),
+    );
+  }
+
+  Widget _buildSectionDescription(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 70),
+      child: Text(
+        sectionDescription ?? '',
+        textAlign: TextAlign.center,
+        style: Theme.of(context).textTheme.bodySmall,
       ),
-      body: Column(
-        children: [
-          const SizedBox(
-            height: Dimens.marginSeventy,
-          ),
-          if (imageAssetPath != null)
-            SvgPicture.asset(
-              imageAssetPath!,
-            ),
-          const SizedBox(
-            height: Dimens.marginMiddle,
-          ),
-          Text(
-            sectionTitle ?? '',
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 24,
-                  color: ThemeColors.grey,
-                ),
-          ),
-          const SizedBox(
-            height: Dimens.marginTen,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 70,
-            ),
-            child: Text(
-              sectionDescription ?? '',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ),
-          const SizedBox(
-            height: 200,
-          ),
-          TwoColorCircleProgressIndicator(
-            progress: onboardingProgress ?? 0.0,
-            color1: ThemeColors.green,
-            color2: ThemeColors.lightGreen,
-            size: 86,
-            strokeWidth: Dimens.marginFive,
-            child: Container(
-              width: 70,
-              height: 70,
-              decoration: const BoxDecoration(
-                color: ThemeColors.green,
-                shape: BoxShape.circle,
-              ),
-              child: (isLastScreen ?? false)
-                  ? GestureDetector(
-                      onTap: onButtonTap,
-                      child: Center(
-                        child: Text(
-                          'Go',
-                          style:
-                              Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    color: ThemeColors.white,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                        ),
-                      ),
-                    )
-                  : IconButton(
-                      icon: const Icon(
-                        Icons.arrow_forward,
+    );
+  }
+
+  Widget _buildProgressIndicator(BuildContext context) {
+    return TwoColorCircleProgressIndicator(
+      progress: onboardingProgress ?? 0.0,
+      color1: ThemeColors.green,
+      color2: ThemeColors.lightGreen,
+      size: 86,
+      strokeWidth: Dimens.marginFive,
+      child: _buildProgressIndicatorChild(context),
+    );
+  }
+
+  Widget _buildProgressIndicatorChild(BuildContext context) {
+    return Container(
+      width: 70,
+      height: 70,
+      decoration: const BoxDecoration(
+        color: ThemeColors.green,
+        shape: BoxShape.circle,
+      ),
+      child: (isLastScreen ?? false)
+          ? GestureDetector(
+              onTap: onButtonTap,
+              child: Center(
+                child: Text(
+                  'Go',
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: ThemeColors.white,
+                        fontWeight: FontWeight.w500,
                       ),
-                      onPressed: onButtonTap,
-                      color: ThemeColors.white,
-                    ),
+                ),
+              ),
+            )
+          : IconButton(
+              icon: const Icon(
+                Icons.arrow_forward,
+                color: ThemeColors.white,
+              ),
+              onPressed: onButtonTap,
             ),
-          )
-        ],
-      ),
     );
   }
 }

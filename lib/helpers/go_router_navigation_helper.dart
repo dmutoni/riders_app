@@ -6,7 +6,7 @@ import 'package:flutter_starter_template/screens/authentication/set_new_password
 import 'package:flutter_starter_template/screens/authentication/signup_screen.dart';
 import 'package:flutter_starter_template/screens/authentication/welcome_screen.dart';
 import 'package:flutter_starter_template/screens/common/error_screen.dart';
-import 'package:flutter_starter_template/screens/home_screen.dart';
+import 'package:flutter_starter_template/screens/home/home_screen.dart';
 import 'package:flutter_starter_template/screens/onboarding/car_onboarding_screen.dart';
 import 'package:flutter_starter_template/screens/onboarding/location_onboarding_screen.dart';
 import 'package:flutter_starter_template/screens/onboarding/time_onboarding_screen.dart';
@@ -19,82 +19,83 @@ final firebaseinitializerProvider = FutureProvider<FirebaseApp>((ref) async {
 });
 
 final _key = GlobalKey<NavigatorState>();
-final routerProvider = Provider<GoRouter>(
-  (ref) {
-    // final authState = ref.watch(firebaseinitializerProvider);
 
-    return GoRouter(
-      navigatorKey: _key,
-      initialLocation: '/',
-      debugLogDiagnostics: true,
-      routes: [
-        GoRoute(
-          name: 'onboardingLocationScreen',
-          path: LocationOnboardingScreen.routeName,
-          builder: (context, state) => const LocationOnboardingScreen(),
-        ),
-        GoRoute(
-          name: 'onboardingtimeScreen',
-          path: TimeOnboardingScreen.routeName,
-          builder: (context, state) => const TimeOnboardingScreen(),
-        ),
-        GoRoute(
-          name: 'onboardingCarScreen',
-          path: CarOnboardingScreen.routeName,
-          builder: (context, state) => const CarOnboardingScreen(),
-        ),
-        GoRoute(
-          name: 'login',
-          path: LoginScreen.routeName,
-          builder: (context, state) => const LoginScreen(),
-        ),
-        GoRoute(
-          name: 'home',
-          path: HomeScreen.routeName,
-          builder: (context, state) => const HomeScreen(),
-        ),
-        GoRoute(
-          name: 'signup',
-          path: SignupScreen.routeName,
-          builder: (context, state) => const SignupScreen(),
-        ),
-        GoRoute(
-          name: 'authchecker',
-          path: AuthChecker.routeName,
-          builder: (context, state) => const AuthChecker(),
-        ),
-        GoRoute(
-          name: 'loginScreen',
-          path: LoginScreen.routeName,
-          builder: (context, state) => const LoginScreen(),
-        ),
-        GoRoute(
-          name: 'welcomeScreen',
-          path: WelcomeScreen.routeName,
-          builder: (context, state) => const WelcomeScreen(),
-        ),
-        GoRoute(
-          name: 'phoneVerificationScreen',
-          path: PhoneVerificationScreen.routeName,
-          builder: (context, state) => const PhoneVerificationScreen(),
-        ),
-        GoRoute(
-          name: 'setNewPasswordScreen',
-          path: SetNewPassword.routeName,
-          builder: (context, state) => const SetNewPassword(),
-        )
-      ],
-      errorBuilder: (context, state) => const ErrorScreen(),
-      // redirect: (context, state) {
-      //   authState.when(
-      //     data: (data) {
-      //       return const AuthChecker();
-      //     },
-      //     error: (error, stackTrace) => const ErrorScreen(),
-      //     loading: () => const CircularProgressIndicator(),
-      //   );
-      //   return null;
-      // },
-    );
-  },
-);
+final routerProvider = Provider<GoRouter>((ref) {
+  final authState = ref.watch(firebaseinitializerProvider);
+
+  return GoRouter(
+    navigatorKey: _key,
+    initialLocation: '/',
+    debugLogDiagnostics: true,
+    routes: _buildRoutes(),
+    errorBuilder: (context, state) => const ErrorScreen(),
+    // redirect: (context, state) => _redirectLogic(authState),
+  );
+});
+
+List<GoRoute> _buildRoutes() {
+  return [
+    GoRoute(
+      name: LocationOnboardingScreen.routeName,
+      path: LocationOnboardingScreen.routeName,
+      builder: (context, state) => const LocationOnboardingScreen(),
+    ),
+    GoRoute(
+      name: TimeOnboardingScreen.routeName,
+      path: TimeOnboardingScreen.routeName,
+      builder: (context, state) => const TimeOnboardingScreen(),
+    ),
+    GoRoute(
+      name: CarOnboardingScreen.routeName,
+      path: CarOnboardingScreen.routeName,
+      builder: (context, state) => const CarOnboardingScreen(),
+    ),
+    GoRoute(
+      name: LoginScreen.routeName,
+      path: LoginScreen.routeName,
+      builder: (context, state) => const LoginScreen(),
+    ),
+    GoRoute(
+      name: HomeScreen.routeName,
+      path: HomeScreen.routeName,
+      builder: (context, state) => const HomeScreen(),
+    ),
+    GoRoute(
+      name: SignupScreen.routeName,
+      path: SignupScreen.routeName,
+      builder: (context, state) => const SignupScreen(),
+    ),
+    GoRoute(
+      name: AuthChecker.routeName,
+      path: AuthChecker.routeName,
+      builder: (context, state) => const AuthChecker(),
+    ),
+    GoRoute(
+      name: WelcomeScreen.routeName,
+      path: WelcomeScreen.routeName,
+      builder: (context, state) => const WelcomeScreen(),
+    ),
+    GoRoute(
+      name: PhoneVerificationScreen.routeName,
+      path: PhoneVerificationScreen.routeName,
+      builder: (context, state) => const PhoneVerificationScreen(),
+    ),
+    GoRoute(
+      name: SetNewPassword.routeName,
+      path: SetNewPassword.routeName,
+      builder: (context, state) => const SetNewPassword(),
+    ),
+  ];
+}
+
+// String? _redirectLogic(AsyncValue<FirebaseApp> authState) {
+//   return authState.when(
+//     data: (data) {
+//       // Add your redirect logic here based on authentication state
+//       // Example: if the user is not authenticated, redirect to the login screen
+//       return null;  // return path to redirect, or null if no redirect
+//     },
+//     error: (error, stackTrace) => ErrorScreen.routeName,
+//     loading: () => null,  // Show a loading indicator if necessary
+//   );
+// }

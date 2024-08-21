@@ -22,7 +22,7 @@ abstract class Styles {
 
   static const TextStyle h6HeadingWhite = TextStyle(
     fontFamily: _poppins,
-    fontSize: 12.0,
+    fontSize: 16.0,
     fontWeight: FontWeight.w400,
     color: ThemeColors.white,
     // height: 14.0 / 14.0,
@@ -41,5 +41,12 @@ abstract class Styles {
     fontSize: 14.0,
     fontWeight: FontWeight.w400,
     color: ThemeColors.white,
+  );
+
+  static const TextStyle bottomNavigationBarStyle = TextStyle(
+    fontFamily: _poppins,
+    fontSize: 12.0,
+    fontWeight: FontWeight.w400,
+    color: ThemeColors.black,
   );
 }

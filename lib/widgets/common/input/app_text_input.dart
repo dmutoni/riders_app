@@ -151,6 +151,14 @@ class _AppTextInputState extends State<AppTextInput> {
               ),
               child: Row(
                 children: [
+                  const SizedBox(
+                    width: Dimens.marginSmall,
+                  ),
+                  AppAnimatedSwitcher(
+                    child: widget.leadingWidget ??
+                        widget.variant.leadingWidget ??
+                        const SizedBox.shrink(),
+                  ),
                   Expanded(
                     child: TextField(
                       autocorrect: widget.autocorrect,
@@ -186,7 +194,10 @@ class _AppTextInputState extends State<AppTextInput> {
                             trailingWidget != null
                         ? widget.trailingWidgetOverride ?? trailingWidget!
                         : const SizedBox.shrink(),
-                  )
+                  ),
+                  const SizedBox(
+                    width: Dimens.marginSmall,
+                  ),
                 ],
               ),
             ),

@@ -15,7 +15,7 @@ extension AppInputVariantValues on AppInputVariant {
       case AppInputVariant.clear:
         return Colors.transparent;
       case AppInputVariant.search:
-        return ThemeColors.lightGrey;
+        return ThemeColors.green5;
     }
   }
 
@@ -41,7 +41,7 @@ extension AppInputVariantValues on AppInputVariant {
       case AppInputVariant.clear:
         return ThemeColors.white;
       case AppInputVariant.search:
-        return ThemeColors.white;
+        return ThemeColors.grey;
     }
   }
 
@@ -67,7 +67,7 @@ extension AppInputVariantValues on AppInputVariant {
       case AppInputVariant.clear:
         return ThemeColors.lightGrey;
       case AppInputVariant.search:
-        return ThemeColors.lightGrey;
+        return ThemeColors.green;
     }
   }
 
@@ -109,7 +109,10 @@ extension AppInputVariantValues on AppInputVariant {
   Widget? get leadingWidget {
     switch (this) {
       case AppInputVariant.search:
-        return null;
+        return const Icon(
+          Icons.search,
+          color: ThemeColors.green,
+        );
       case AppInputVariant.dark:
       case AppInputVariant.light:
       case AppInputVariant.clear:

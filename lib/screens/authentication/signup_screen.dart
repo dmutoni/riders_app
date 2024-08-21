@@ -1,11 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_starter_template/enums/widget_configurations/app_top_snackbar_level.dart';
-import 'package:flutter_starter_template/enums/widget_configurations/app_top_snackbar_variant.dart';
 import 'package:flutter_starter_template/enums/widget_configurations/app_button_variant.dart';
 import 'package:flutter_starter_template/helpers/email_validation_helper.dart';
-import 'package:flutter_starter_template/helpers/snackbar_helper.dart';
-import 'package:flutter_starter_template/repository/auth_repository.dart';
 import 'package:flutter_starter_template/screens/authentication/login_screen.dart';
 import 'package:flutter_starter_template/screens/authentication/phone_verification_screen.dart';
 import 'package:flutter_starter_template/values/colors.dart';
@@ -16,31 +11,22 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intersperse/intersperse.dart';
 
-enum InputLabelVariant { label, hint }
-
 class SignupScreen extends ConsumerStatefulWidget {
   static const String routeName = '/signupScreen';
 
-  const SignupScreen({
-    super.key,
-  });
+  const SignupScreen({super.key});
 
   @override
   ConsumerState<SignupScreen> createState() => _SignupScreenState();
 }
 
 class _SignupScreenState extends ConsumerState<SignupScreen> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   final bool _isShowingPassword = true;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   void dispose() {
@@ -52,297 +38,255 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var auth = ref.watch(authenticationProvider);
-
-    final TextEditingController controller = TextEditingController();
-    String? selectedValue;
-    final List<String> options = ['Option 1', 'Option 2', 'Option 3'];
-
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: GestureDetector(
-            onTap: () => context.pop(),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+      body: SafeArea(
+        bottom: true,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: Dimens.marginDefault),
+          child: Form(
+            key: _formKey,
+            child: ListView(
               children: [
-                Icon(
-                  Icons.arrow_back_ios,
-                  color: ThemeColors.grey,
-                  size: 25,
+                GestureDetector(
+                  onTap: () => context.pop(),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.arrow_back_ios,
+                        color: ThemeColors.grey,
+                        size: 15,
+                      ),
+                      Text(
+                        'Back',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: ThemeColors.grey,
+                            ),
+                      )
+                    ],
+                  ),
                 ),
+                const SizedBox(height: Dimens.marginLarge),
                 Text(
-                  'Back',
-                )
+                  'Sign up with your email or phone number',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: Dimens.marginLarge),
+                _buildTextInputs(),
+                const SizedBox(height: Dimens.marginLarge),
+                _buildTermsOfService(context),
+                const SizedBox(height: Dimens.marginLarge),
+                _buildSignUpButton(context),
+                const SizedBox(height: Dimens.marginMedium),
+                _buildOrDivider(),
+                const SizedBox(height: Dimens.marginBig),
+                _buildSignInLink(context),
               ],
             ),
           ),
         ),
-        leadingWidth: 100,
       ),
-      body: ListView(
-        shrinkWrap: true,
-        children: [
-          Container(
-            padding: const EdgeInsets.only(
-              left: 20.0,
-              right: 20.0,
+    );
+  }
+
+  Widget _buildTextInputs() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ...intersperse(
+          const SizedBox(height: Dimens.marginSmall),
+          [
+            AppTextInput(
+              controller: _nameController,
+              labelColor: ThemeColors.lightGrey,
+              label: 'Name',
+              validator: (value) {
+                if (value == null || value.isEmpty) return 'Name is required';
+                return null;
+              },
+              validateOnInput: true,
             ),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Sign up with your email or phone number',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  ...intersperse(
-                    const SizedBox(
-                      height: Dimens.marginSmall,
-                    ),
-                    [
-                      AppTextInput(
-                        controller: _nameController,
-                        labelColor: ThemeColors.lightGrey,
-                        label: 'Name',
-                        validator: (value) {
-                          if (value!.isEmpty) return 'Name is required';
-                          return null;
-                        },
-                        validateOnInput: true,
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      AppTextInput(
-                        controller: _emailController,
-                        label: 'Email',
-                        validator: (value) {
-                          if (value!.isEmpty) return 'Email is required';
-                          if (!isEmailValid(value)) {
-                            return 'Email is invalid';
-                          }
-                          return null;
-                        },
-                        validateOnInput: true,
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      AppTextInput(
-                        obscureText: _isShowingPassword,
-                        controller: _passwordController,
-                        label: 'Email',
-                        validator: (value) {
-                          if (value!.isEmpty) return 'Password is required';
-                          if (value.length < 6) {
-                            return 'Password must be at least 6 characters';
-                          }
-                          return null;
-                        },
-                        validateOnInput: true,
-                      ),
-                      TextFormField(
-                        controller: controller,
-                        readOnly: true,
-                        decoration: InputDecoration(
-                          labelText: 'Select an option',
-                          suffixIcon: IconButton(
-                            icon: const Icon(Icons.arrow_drop_down),
-                            onPressed: () async {
-                              final result = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => FullScreenDropdown(
-                                    options: options,
-                                    selectedValue: selectedValue,
-                                  ),
-                                ),
-                              );
-                              if (result != null) {
-                                setState(() {
-                                  selectedValue = result;
-                                  controller.text = result;
-                                });
-                              }
-                            },
-                          ),
-                        ),
-                      ),
-                      DropdownButtonFormField<String>(
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(8.0),
-                            ),
-                          ),
-                          contentPadding:
-                              EdgeInsets.symmetric(horizontal: 16.0),
-                        ),
-                        value: selectedValue,
-                        items: [
-                          'Male',
-                          'Female',
-                        ]
-                            .map((option) => DropdownMenuItem(
-                                  value: option,
-                                  child: Text(option),
-                                ))
-                            .toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedValue = value;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Icon(
-                        Icons.check_circle_outline,
-                        color: ThemeColors.green2,
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: RichText(
-                          overflow:
-                              TextOverflow.visible, // Or TextOverflow.fade
-                          text: TextSpan(
-                            text: 'By signing up. You agree to the ',
-                            style: Theme.of(context).textTheme.bodySmall,
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: 'Terms of service ',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
-                                      color: ThemeColors.green3,
-                                    ),
-                              ),
-                              TextSpan(
-                                text: 'and ',
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                              TextSpan(
-                                text:
-                                    'Privacy policy.', // Default style for the rest
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
-                                      color: ThemeColors.green,
-                                    ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 40.0,
-                  ),
-                  AppButton(
-                    title: 'Sign up',
-                    isLoading: auth.isLoading,
-                    onTap: () async {
-                      try {
-                        // if (!_formKey.currentState!.validate()) return;
+            AppTextInput(
+              controller: _emailController,
+              label: 'Email',
+              validator: (value) {
+                if (value == null || value.isEmpty) return 'Email is required';
+                if (!isEmailValid(value)) return 'Email is invalid';
+                return null;
+              },
+              validateOnInput: true,
+            ),
+            AppTextInput(
+              obscureText: _isShowingPassword,
+              controller: _passwordController,
+              label: 'Password',
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Password is required';
+                }
+                if (value.length < 6) {
+                  return 'Password must be at least 6 characters';
+                }
+                return null;
+              },
+              validateOnInput: true,
+            ),
+            _buildFullScreenDropdown(),
+            _buildDropdownButtonFormField(),
+          ],
+        ),
+      ],
+    );
+  }
 
-                        context.go(PhoneVerificationScreen.routeName);
-                      } on FirebaseAuthException catch (e) {
-                        Map<String, String> errorMessages = {
-                          'email-already-in-use':
-                              'Email has already been used. Please use another email.',
-                          'invalid-email': 'Invalid email used',
-                          'weak-password': 'Password is too weak',
-                        };
+  Widget _buildFullScreenDropdown() {
+    final controller = TextEditingController();
+    String? selectedValue;
+    final options = ['Option 1', 'Option 2', 'Option 3'];
 
-                        String message = errorMessages[e.code] ??
-                            'Something went wrong. Please try again.';
-
-                        SnackbarHelper.showSnackbar(
-                          message: message,
-                          level: AppTopSnackbarLevel.alert,
-                          variant: AppTopSnackbarVariant.error,
-                          context: context,
-                        );
-                      }
-                    },
-                    variant: AppButtonVariant.dark,
-                  ),
-                  const SizedBox(
-                    height: 18.0,
-                  ),
-                  const Row(
-                    children: [
-                      Expanded(
-                        child: Divider(),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text('or'),
-                      ),
-                      Expanded(
-                        child: Divider(),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 80,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      context.go(
-                        LoginScreen.routeName,
-                      );
-                    },
-                    child: Center(
-                      child: RichText(
-                        text: TextSpan(
-                          text: 'Already have an account? ',
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: ThemeColors.grey2,
-                                  ),
-                          children: [
-                            TextSpan(
-                              text: 'Sign in.',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.copyWith(
-                                    color: ThemeColors.primaryColor,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+    return TextFormField(
+      controller: controller,
+      readOnly: true,
+      decoration: InputDecoration(
+        labelText: 'Select an option',
+        suffixIcon: IconButton(
+          icon: const Icon(Icons.arrow_drop_down),
+          onPressed: () async {
+            final result = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => FullScreenDropdown(
+                  options: options,
+                  selectedValue: selectedValue,
+                ),
               ),
+            );
+            if (result != null) {
+              setState(() {
+                selectedValue = result;
+                controller.text = result;
+              });
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDropdownButtonFormField() {
+    String? selectedValue;
+
+    return DropdownButtonFormField<String>(
+      decoration: const InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+        ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+      ),
+      value: selectedValue,
+      items: ['Male', 'Female']
+          .map((option) => DropdownMenuItem(
+                value: option,
+                child: Text(option),
+              ))
+          .toList(),
+      onChanged: (value) {
+        setState(() {
+          selectedValue = value;
+        });
+      },
+    );
+  }
+
+  Widget _buildTermsOfService(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Icon(Icons.check_circle_outline, color: ThemeColors.green2),
+        const SizedBox(width: Dimens.marginSmall),
+        Expanded(
+          child: RichText(
+            text: TextSpan(
+              text: 'By signing up, you agree to the ',
+              style: Theme.of(context).textTheme.bodySmall,
+              children: [
+                TextSpan(
+                  text: 'Terms of Service ',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(color: ThemeColors.green3),
+                ),
+                TextSpan(
+                  text: 'and ',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                TextSpan(
+                  text: 'Privacy Policy.',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(color: ThemeColors.green),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSignUpButton(BuildContext context) {
+    return AppButton(
+      title: 'Sign up',
+      onTap: () async {
+        if (_formKey.currentState?.validate() ?? false) {
+          try {
+            context.pushNamed(PhoneVerificationScreen.routeName);
+          } catch (e) {
+            return;
+          }
+        }
+      },
+      variant: AppButtonVariant.dark,
+    );
+  }
+
+  Widget _buildOrDivider() {
+    return const Row(
+      children: [
+        Expanded(child: Divider()),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: Dimens.marginSmall),
+          child: Text('or'),
+        ),
+        Expanded(child: Divider()),
+      ],
+    );
+  }
+
+  Widget _buildSignInLink(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        context.pushNamed(LoginScreen.routeName);
+      },
+      child: Center(
+        child: RichText(
+          text: TextSpan(
+            text: 'Already have an account? ',
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(color: ThemeColors.grey2),
+            children: [
+              TextSpan(
+                text: 'Sign in.',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: ThemeColors.primaryColor,
+                    fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -368,9 +312,7 @@ class FullScreenDropdown extends StatelessWidget {
           return ListTile(
             title: Text(option),
             selected: option == selectedValue,
-            onTap: () {
-              Navigator.pop(context, option);
-            },
+            onTap: () => Navigator.pop(context, option),
           );
         },
       ),
