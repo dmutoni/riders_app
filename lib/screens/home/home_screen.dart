@@ -8,6 +8,7 @@ import 'package:flutter_starter_template/values/colors.dart';
 import 'package:flutter_starter_template/values/dimens.dart';
 import 'package:flutter_starter_template/widgets/common/input/app_button.dart';
 import 'package:flutter_starter_template/widgets/common/input/app_text_input.dart';
+import 'package:flutter_starter_template/widgets/common/visual/address_bottom_sheet.dart';
 import 'package:flutter_starter_template/widgets/common/visual/tab_item.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -162,11 +163,16 @@ class _MyHomePageState extends State<HomeScreen> {
                       decoration: BoxDecoration(
                         color: ThemeColors.green5, // Background color
                         borderRadius: BorderRadius.circular(Dimens.marginSmall),
+                        border: Border.all(
+                          color: ThemeColors.green, // Border color
+                        ),
                       ),
                       child: Row(
                         children: [
-                          _buildTabButton('Transport', 0),
-                          _buildTabButton('Delivery', 1),
+                          _buildTabButton('Transport', 0, () {
+                            showAddressBottomSheet(context);
+                          }),
+                          _buildTabButton('Delivery', 1, () {}),
                         ],
                       ),
                     ),
@@ -410,7 +416,7 @@ class _MyHomePageState extends State<HomeScreen> {
     // Fetch location updates
   }
 
-  Widget _buildTabButton(String text, int index) {
+  Widget _buildTabButton(String text, int index, void Function()? onTap) {
     bool isSelected = selectedIndex == index;
 
     return Expanded(
@@ -419,6 +425,7 @@ class _MyHomePageState extends State<HomeScreen> {
           setState(() {
             selectedIndex = index;
           });
+          onTap?.call();
         },
         child: Container(
           padding: const EdgeInsets.symmetric(
@@ -426,11 +433,8 @@ class _MyHomePageState extends State<HomeScreen> {
           ),
           decoration: BoxDecoration(
             color: isSelected ? ThemeColors.primaryColor : Colors.transparent,
-            borderRadius: const BorderRadius.horizontal(
-              left: Radius.circular(
-                Dimens.marginSmall,
-              ),
-              right: Radius.circular(
+            borderRadius: const BorderRadius.all(
+              Radius.circular(
                 Dimens.marginSmall,
               ),
             ),
@@ -446,6 +450,21 @@ class _MyHomePageState extends State<HomeScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  void showAddressBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      barrierColor: Colors.transparent,
+      context: context,
+      // isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(16.0),
+        ),
+      ),
+      builder: (context) => const AddressBottomSheet(),
     );
   }
 }

@@ -67,7 +67,7 @@ extension AppInputVariantValues on AppInputVariant {
       case AppInputVariant.clear:
         return ThemeColors.lightGrey;
       case AppInputVariant.search:
-        return ThemeColors.green;
+        return ThemeColors.green5;
     }
   }
 
@@ -111,7 +111,7 @@ extension AppInputVariantValues on AppInputVariant {
       case AppInputVariant.search:
         return const Icon(
           Icons.search,
-          color: ThemeColors.green,
+          color: ThemeColors.black,
         );
       case AppInputVariant.dark:
       case AppInputVariant.light:

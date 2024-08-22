@@ -73,6 +73,7 @@ flutter:
     - assets/images/login/
     - assets/images/onboarding/
     - assets/images/home/
+    - assets/images/transport/
 
   fonts:
     - family: Coiny

@@ -10,6 +10,7 @@ import 'package:flutter_starter_template/screens/home/home_screen.dart';
 import 'package:flutter_starter_template/screens/onboarding/car_onboarding_screen.dart';
 import 'package:flutter_starter_template/screens/onboarding/location_onboarding_screen.dart';
 import 'package:flutter_starter_template/screens/onboarding/time_onboarding_screen.dart';
+import 'package:flutter_starter_template/screens/transport/select_transport_screen.dart';
 import 'package:flutter_starter_template/widgets/auth_checker.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -85,6 +86,11 @@ List<GoRoute> _buildRoutes() {
       path: SetNewPassword.routeName,
       builder: (context, state) => const SetNewPassword(),
     ),
+    GoRoute(
+      name: SelectTransportScreen.routeName,
+      path: SelectTransportScreen.routeName,
+      builder: (context, state) => const SelectTransportScreen(),
+    )
   ];
 }
 
