@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_starter_template/screens/transport/available_cars_screen.dart';
 import 'package:flutter_starter_template/values/assets/transport_assets.dart';
 import 'package:flutter_starter_template/values/dimens.dart';
 import 'package:flutter_starter_template/widgets/common/visual/option_item.dart';
@@ -110,6 +111,9 @@ class _SelectTransportScreenState extends State<SelectTransportScreen> {
                       setState(() {
                         selectedTransport = transportOptions.indexOf(option);
                       });
+                      context.pushNamed(
+                        AvailableCarsScreen.routeName,
+                      );
                     },
                   );
                 },

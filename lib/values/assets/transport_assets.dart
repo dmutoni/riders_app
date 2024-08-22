@@ -3,4 +3,6 @@ abstract class TransportAssets {
   static const String bike = 'assets/images/transport/bike.png';
   static const String cycle = 'assets/images/transport/cycle.png';
   static const String taxi = 'assets/images/transport/taxi.png';
+  static const String availableCar =
+      'assets/images/transport/available_car.png';
 }

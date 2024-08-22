@@ -10,6 +10,7 @@ import 'package:flutter_starter_template/screens/home/home_screen.dart';
 import 'package:flutter_starter_template/screens/onboarding/car_onboarding_screen.dart';
 import 'package:flutter_starter_template/screens/onboarding/location_onboarding_screen.dart';
 import 'package:flutter_starter_template/screens/onboarding/time_onboarding_screen.dart';
+import 'package:flutter_starter_template/screens/transport/available_cars_screen.dart';
 import 'package:flutter_starter_template/screens/transport/select_transport_screen.dart';
 import 'package:flutter_starter_template/widgets/auth_checker.dart';
 import 'package:go_router/go_router.dart';
@@ -22,7 +23,7 @@ final firebaseinitializerProvider = FutureProvider<FirebaseApp>((ref) async {
 final _key = GlobalKey<NavigatorState>();
 
 final routerProvider = Provider<GoRouter>((ref) {
-  final authState = ref.watch(firebaseinitializerProvider);
+  // final authState = ref.watch(firebaseinitializerProvider);
 
   return GoRouter(
     navigatorKey: _key,
@@ -90,6 +91,11 @@ List<GoRoute> _buildRoutes() {
       name: SelectTransportScreen.routeName,
       path: SelectTransportScreen.routeName,
       builder: (context, state) => const SelectTransportScreen(),
+    ),
+    GoRoute(
+      name: AvailableCarsScreen.routeName,
+      path: AvailableCarsScreen.routeName,
+      builder: (context, state) => const AvailableCarsScreen(),
     )
   ];
 }
