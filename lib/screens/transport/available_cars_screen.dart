@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_starter_template/data/models/car_model.dart';
 import 'package:flutter_starter_template/enums/widget_configurations/app_button_variant.dart';
+import 'package:flutter_starter_template/screens/transport/car_details_screen.dart';
 import 'package:flutter_starter_template/values/assets/transport_assets.dart';
 import 'package:flutter_starter_template/values/colors.dart';
 import 'package:flutter_starter_template/values/dimens.dart';
@@ -15,39 +17,64 @@ class AvailableCarsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<Map<String, dynamic>> availableCars = [
-      {
-        'carName': 'BMW Cabrio',
-        'image': Image.asset(
+    final List<CarModel> availableCars = [
+      const CarModel(
+        name: 'Toyota Corolla',
+        color: 'Black',
+        fuelType: 'Petrol',
+        gearType: 'Automatic',
+        model: '2021',
+        capacity: '1500cc',
+        maxPower: '97bhp',
+        fuel: '17.8kmpl',
+        maxSpeed: '180kmph',
+        speed60Mph: '10.5sec',
+        numberOfSeats: 5,
+        imageUrls: [
           TransportAssets.availableCar,
-        ),
-        'carDetails': 'Automatic | 3 seats | Octane',
-        'location': 'Lagos',
-      },
-      {
-        'carName': 'BMW Cabrio',
-        'image': Image.asset(
+          TransportAssets.availableCar2,
+        ],
+        rate: '4.9',
+        reviews: '1000',
+      ),
+      const CarModel(
+        name: 'Toyota Corolla',
+        color: 'Black',
+        fuelType: 'Petrol',
+        gearType: 'Automatic',
+        model: '2021',
+        capacity: '1500cc',
+        maxPower: '97bhp',
+        fuel: '17.8kmpl',
+        maxSpeed: '180kmph',
+        speed60Mph: '10.5sec',
+        numberOfSeats: 5,
+        imageUrls: [
           TransportAssets.availableCar,
-        ),
-        'carDetails': 'Automatic | 3 seats | Octane',
-        'location': 'Lagos',
-      },
-      {
-        'carName': 'BMW Cabrio',
-        'image': Image.asset(
+          TransportAssets.availableCar2,
+        ],
+        rate: '4.9',
+        reviews: '1000',
+      ),
+      const CarModel(
+        name: 'Toyota Corolla',
+        color: 'Black',
+        fuelType: 'Petrol',
+        gearType: 'Automatic',
+        model: '2021',
+        capacity: '1500cc',
+        maxPower: '97bhp',
+        fuel: '17.8kmpl',
+        maxSpeed: '180kmph',
+        speed60Mph: '10.5sec',
+        numberOfSeats: 5,
+        imageUrls: [
           TransportAssets.availableCar,
-        ),
-        'carDetails': 'Automatic | 3 seats | Octane',
-        'location': 'Lagos',
-      },
-      {
-        'carName': 'BMW Cabrio',
-        'image': Image.asset(
-          TransportAssets.availableCar,
-        ),
-        'carDetails': 'Automatic | 3 seats | Octane',
-        'location': 'Lagos',
-      },
+          TransportAssets.availableCar2,
+        ],
+        rate: '4.9',
+        reviews: '1000',
+      ),
     ];
 
     return Scaffold(
@@ -101,12 +128,26 @@ class AvailableCarsScreen extends ConsumerWidget {
                 itemBuilder: (context, index) {
                   final option = availableCars[index];
 
-                  return _buildCarOption(
-                    context: context,
-                    carName: option['carName'],
-                    image: option['image'],
-                    carDetails: option['carDetails'],
-                    location: option['location'],
+                  return GestureDetector(
+                    onTap: () => context.pushNamed(
+                      CarDetailsScreen.routeName,
+                      extra: option,
+                    ),
+                    child: _buildCarOption(
+                      context: context,
+                      carName: option.name,
+                      image: option.imageUrls != null
+                          ? Image.asset(
+                              option.imageUrls![0],
+                              width: 100,
+                              height: 50,
+                            )
+                          : null,
+                      carDetails: option.color != null
+                          ? '${option.gearType} | ${option.numberOfSeats} seats | ${option.color}  '
+                          : '',
+                      location: option.location,
+                    ),
                   );
                 },
               ),

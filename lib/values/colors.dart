@@ -20,6 +20,7 @@ abstract class ThemeColors {
   static const grey = Color(0xFF414141);
   static const grey2 = Color(0xFF5A5A5A);
   static const blue = Color(0xFF2364E1);
+  static const yellow = Color(0xFFFFD700);
 }
 
 @immutable

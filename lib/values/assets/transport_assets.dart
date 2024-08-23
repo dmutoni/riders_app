@@ -5,4 +5,6 @@ abstract class TransportAssets {
   static const String taxi = 'assets/images/transport/taxi.png';
   static const String availableCar =
       'assets/images/transport/available_car.png';
+  static const String availableCar2 =
+      'assets/images/transport/available_car_2.png';
 }

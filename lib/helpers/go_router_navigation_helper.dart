@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_starter_template/data/models/car_model.dart';
 import 'package:flutter_starter_template/screens/authentication/login_screen.dart';
 import 'package:flutter_starter_template/screens/authentication/phone_verification_screen.dart';
 import 'package:flutter_starter_template/screens/authentication/set_new_password.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_starter_template/screens/onboarding/car_onboarding_scree
 import 'package:flutter_starter_template/screens/onboarding/location_onboarding_screen.dart';
 import 'package:flutter_starter_template/screens/onboarding/time_onboarding_screen.dart';
 import 'package:flutter_starter_template/screens/transport/available_cars_screen.dart';
+import 'package:flutter_starter_template/screens/transport/car_details_screen.dart';
 import 'package:flutter_starter_template/screens/transport/select_transport_screen.dart';
 import 'package:flutter_starter_template/widgets/auth_checker.dart';
 import 'package:go_router/go_router.dart';
@@ -96,7 +98,17 @@ List<GoRoute> _buildRoutes() {
       name: AvailableCarsScreen.routeName,
       path: AvailableCarsScreen.routeName,
       builder: (context, state) => const AvailableCarsScreen(),
-    )
+    ),
+    GoRoute(
+      name: CarDetailsScreen.routeName,
+      path: CarDetailsScreen.routeName,
+      builder: (context, state) {
+        final CarModel? carModel = state.extra as CarModel?;
+        return CarDetailsScreen(
+          carModel: carModel,
+        );
+      },
+    ),
   ];
 }
 

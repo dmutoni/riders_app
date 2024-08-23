@@ -42,6 +42,10 @@ dependencies:
   one_context: ^4.0.0
   google_maps_flutter: ^2.9.0
   location: ^6.0.2
+  freezed: ^2.5.2
+  freezed_annotation: ^2.4.4
+  json_annotation: ^4.9.0
+  carousel_slider: ^5.0.0
 
 dev_dependencies:
   flutter_test:
@@ -54,9 +58,10 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
   riverpod_generator: ^2.3.9
-  build_runner: ^2.4.8
+  build_runner: ^2.4.11
   custom_lint: ^0.5.8
   riverpod_lint: ^2.3.7
+  json_serializable: ^6.8.0
   
 
 # For information on the generic Dart part of this file, see the
