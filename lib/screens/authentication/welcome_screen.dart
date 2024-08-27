@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_starter_template/enums/widget_configurations/app_button_variant.dart';
-import 'package:flutter_starter_template/screens/authentication/login_screen.dart';
-import 'package:flutter_starter_template/screens/authentication/signup_screen.dart';
-import 'package:flutter_starter_template/values/assets/onboarding_assets.dart';
-import 'package:flutter_starter_template/values/dimens.dart';
-import 'package:flutter_starter_template/widgets/common/input/app_button.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riders_app/enums/widget_configurations/app_button_variant.dart';
+import 'package:riders_app/screens/authentication/login_screen.dart';
+import 'package:riders_app/screens/authentication/signup_screen.dart';
+import 'package:riders_app/values/assets/onboarding_assets.dart';
+import 'package:riders_app/values/dimens.dart';
+import 'package:riders_app/widgets/common/input/app_button.dart';
 
 class WelcomeScreen extends ConsumerWidget {
   static const String routeName = '/welcomeScreen';
@@ -25,20 +25,20 @@ class WelcomeScreen extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Spacer(flex: 2), // Use Spacer for dynamic spacing
+              const Spacer(flex: 2),
               SvgPicture.asset(OnboardingAssets.welcomeImage),
-              const SizedBox(height: Dimens.marginSmall), // Use named constant
+              const SizedBox(height: Dimens.marginSmall),
               Text(
                 'Welcome',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
-              const SizedBox(height: Dimens.marginSmall), // Use named constant
+              const SizedBox(height: Dimens.marginSmall),
               Text(
                 'Have a better sharing experience',
                 style: Theme.of(context).textTheme.bodyMedium,
-                textAlign: TextAlign.center, // Better alignment for text
+                textAlign: TextAlign.center,
               ),
-              const Spacer(flex: 12), // Dynamic spacing to push buttons down
+              const Spacer(flex: 12),
               AppButton(
                 title: 'Create an account',
                 onTap: () {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_starter_template/enums/widget_configurations/app_top_snackbar_variant.dart';
-import 'package:flutter_starter_template/values/colors.dart';
-import 'package:flutter_starter_template/values/dimens.dart';
-import 'package:flutter_starter_template/values/durations.dart';
+import 'package:riders_app/enums/widget_configurations/app_top_snackbar_variant.dart';
+import 'package:riders_app/values/colors.dart';
+import 'package:riders_app/values/dimens.dart';
+import 'package:riders_app/values/durations.dart';
 
 class AppTopSnackbar extends StatefulWidget {
   final String message;

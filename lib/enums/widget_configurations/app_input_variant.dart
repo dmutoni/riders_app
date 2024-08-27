@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_starter_template/values/colors.dart';
-import 'package:flutter_starter_template/values/dimens.dart';
-import 'package:flutter_starter_template/theme/styles.dart';
+import 'package:riders_app/theme/styles.dart';
+import 'package:riders_app/values/colors.dart';
+import 'package:riders_app/values/dimens.dart';
 
 enum AppInputVariant { dark, light, clear, search }
 

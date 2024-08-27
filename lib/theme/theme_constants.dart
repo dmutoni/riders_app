@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_starter_template/values/colors.dart';
-import 'package:flutter_starter_template/values/dimens.dart';
+import 'package:riders_app/values/colors.dart';
+import 'package:riders_app/values/dimens.dart';
 
 Color? colorPrimary = const AppColors().primaryColor;
-
-AppColors colors(context) => Theme.of(context).extension<AppColors>()!;
 
 ThemeData getAppTheme({
   required BuildContext context,

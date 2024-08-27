@@ -1,3 +1,3 @@
 abstract class HomeAssets {
-  static const String avatar = 'assets/images/home/avatar.png';
+  static const String avatar = 'assets/images/home/profile_avatar.png';
 }

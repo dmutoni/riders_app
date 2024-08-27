@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_starter_template/values/colors.dart';
-import 'package:flutter_starter_template/values/dimens.dart';
-import 'package:flutter_starter_template/widgets/common/input/app_button.dart';
-import 'package:flutter_starter_template/widgets/common/input/app_text_input.dart';
-import 'package:flutter_starter_template/widgets/common/visual/confirm_address_bottom_sheet.dart';
 import 'package:go_router/go_router.dart';
+import 'package:riders_app/values/colors.dart';
+import 'package:riders_app/values/dimens.dart';
+import 'package:riders_app/widgets/common/input/app_button.dart';
+import 'package:riders_app/widgets/common/input/app_text_input.dart';
+import 'package:riders_app/widgets/common/visual/confirm_address_bottom_sheet.dart';
 
 class AddressBottomSheet extends StatelessWidget {
   const AddressBottomSheet({Key? key}) : super(key: key);
@@ -44,9 +44,7 @@ class AddressBottomSheet extends StatelessWidget {
               ),
             ),
             const SizedBox(height: Dimens.marginDefault),
-
             const Divider(height: 1, color: ThemeColors.grey),
-
             const SizedBox(height: Dimens.marginDefault),
             const Column(
               children: [
@@ -55,7 +53,6 @@ class AddressBottomSheet extends StatelessWidget {
                   leadingWidget: Icon(Icons.my_location),
                 ),
                 SizedBox(height: 8.0),
-                // To Address Input
                 AppTextInput(
                   label: 'To',
                   leadingWidget: Icon(Icons.location_on),
@@ -63,7 +60,6 @@ class AddressBottomSheet extends StatelessWidget {
               ],
             ),
             const SizedBox(height: Dimens.marginDefault),
-            // Recent Places
             Expanded(
               child: ListView(
                 children: [

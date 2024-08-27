@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_starter_template/enums/widget_configurations/app_button_variant.dart';
-import 'package:flutter_starter_template/values/dimens.dart';
-import 'package:flutter_starter_template/theme/styles.dart';
-import 'package:flutter_starter_template/values/durations.dart';
-import 'package:flutter_starter_template/widgets/app_inkwell.dart';
+import 'package:riders_app/enums/widget_configurations/app_button_variant.dart';
+import 'package:riders_app/theme/styles.dart';
+import 'package:riders_app/values/dimens.dart';
+import 'package:riders_app/values/durations.dart';
+import 'package:riders_app/widgets/app_inkwell.dart';
 
 class AppButton extends StatelessWidget {
   final String title;

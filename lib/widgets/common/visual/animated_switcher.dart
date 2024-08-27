@@ -1,6 +1,6 @@
 import 'package:animated_size_and_fade/animated_size_and_fade.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_starter_template/values/durations.dart';
+import 'package:riders_app/values/durations.dart';
 
 class AppAnimatedSwitcher extends StatelessWidget {
   final Widget child;

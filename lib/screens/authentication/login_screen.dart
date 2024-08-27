@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
-
-import 'package:flutter_starter_template/screens/authentication/signup_screen.dart';
-import 'package:flutter_starter_template/screens/home/home_screen.dart';
-import 'package:flutter_starter_template/theme/styles.dart';
-import 'package:flutter_starter_template/values/colors.dart';
-import 'package:flutter_starter_template/values/dimens.dart';
-import 'package:flutter_starter_template/widgets/common/input/app_button.dart';
-import 'package:flutter_starter_template/widgets/common/input/app_text_input.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:riders_app/enums/widget_configurations/app_top_snackbar_level.dart';
+import 'package:riders_app/enums/widget_configurations/app_top_snackbar_variant.dart';
+import 'package:riders_app/helpers/secure_storage_service_helper.dart';
+import 'package:riders_app/helpers/snackbar_helper.dart';
+import 'package:riders_app/screens/authentication/signup_screen.dart';
+import 'package:riders_app/screens/home/home_screen.dart';
+import 'package:riders_app/theme/styles.dart';
+import 'package:riders_app/values/colors.dart';
+import 'package:riders_app/values/dimens.dart';
+import 'package:riders_app/widgets/common/input/app_button.dart';
+import 'package:riders_app/widgets/common/input/app_text_input.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   static const String routeName = '/login';
@@ -39,26 +42,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 20),
-                _buildHeaderText(context),
-                const SizedBox(height: 30),
-                _buildEmailInput(),
-                const SizedBox(height: 20),
-                _buildPasswordInput(),
-                const SizedBox(height: 10),
-                _buildForgetPasswordLink(),
-                const SizedBox(height: 20),
-                _buildSigninButton(context),
-                const SizedBox(height: 20),
-                _buildOrDivider(),
-                const SizedBox(height: 20),
-                _buildSignUpLink(context),
-              ],
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 20),
+                  _buildHeaderText(context),
+                  const SizedBox(height: 30),
+                  _buildEmailInput(),
+                  const SizedBox(height: 20),
+                  _buildPasswordInput(),
+                  const SizedBox(height: 10),
+                  _buildForgetPasswordLink(),
+                  const SizedBox(height: 20),
+                  _buildSigninButton(context),
+                  const SizedBox(height: 20),
+                  _buildOrDivider(),
+                  const SizedBox(height: 20),
+                  _buildSignUpLink(context),
+                ],
+              ),
             ),
           ),
         ),
@@ -68,7 +73,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.transparent,
       elevation: 0,
       leading: Padding(
         padding: const EdgeInsets.all(
@@ -153,11 +157,32 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget _buildSigninButton(BuildContext context) {
     return AppButton(
       title: 'Sign In',
-      onTap: () {
+      onTap: () async {
         if (_formKey.currentState?.validate() ?? false) {
           try {
+            final String password =
+                await SecureStorageServiceHelper().password ?? '';
+
+            final String email = await SecureStorageServiceHelper().email ?? '';
+
+            if (_emailController.text != email ||
+                _passwordController.text != password) {
+              SnackbarHelper.showSnackbar(
+                context: context,
+                message: 'Wrong email or password',
+                level: AppTopSnackbarLevel.warning,
+                variant: AppTopSnackbarVariant.error,
+              );
+              return;
+            }
             context.pushNamed(HomeScreen.routeName);
           } catch (e) {
+            SnackbarHelper.showSnackbar(
+              context: context,
+              message: 'An error occurred',
+              level: AppTopSnackbarLevel.warning,
+              variant: AppTopSnackbarVariant.error,
+            );
             return;
           }
         }

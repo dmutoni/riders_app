@@ -21,6 +21,8 @@ class CarModel with _$CarModel {
     String? location,
     String? rate,
     String? reviews,
+    String? pricePerHours,
+    String? tax,
   }) = _CarModel;
 
   factory CarModel.fromJson(Map<String, Object?> json) =>

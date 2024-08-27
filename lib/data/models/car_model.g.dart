@@ -25,6 +25,8 @@ _$CarModelImpl _$$CarModelImplFromJson(Map<String, dynamic> json) =>
       location: json['location'] as String?,
       rate: json['rate'] as String?,
       reviews: json['reviews'] as String?,
+      pricePerHours: json['pricePerHours'] as String?,
+      tax: json['tax'] as String?,
     );
 
 Map<String, dynamic> _$$CarModelImplToJson(_$CarModelImpl instance) =>
@@ -44,4 +46,6 @@ Map<String, dynamic> _$$CarModelImplToJson(_$CarModelImpl instance) =>
       'location': instance.location,
       'rate': instance.rate,
       'reviews': instance.reviews,
+      'pricePerHours': instance.pricePerHours,
+      'tax': instance.tax,
     };

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_starter_template/enums/widget_configurations/app_input_variant.dart';
-import 'package:flutter_starter_template/theme/theme_constants.dart';
-import 'package:flutter_starter_template/values/dimens.dart';
-import 'package:flutter_starter_template/theme/styles.dart';
-import 'package:flutter_starter_template/values/durations.dart';
-import 'package:flutter_starter_template/widgets/common/input/overridable_form_input.dart';
-import 'package:flutter_starter_template/widgets/common/visual/animated_switcher.dart';
+import 'package:riders_app/enums/widget_configurations/app_input_variant.dart';
+import 'package:riders_app/theme/styles.dart';
+import 'package:riders_app/values/colors.dart';
+import 'package:riders_app/values/dimens.dart';
+import 'package:riders_app/values/durations.dart';
+import 'package:riders_app/widgets/common/input/overridable_form_input.dart';
+import 'package:riders_app/widgets/common/visual/animated_switcher.dart';
 
 enum AppInputLabelVariant { label, hint }
 
@@ -87,7 +87,6 @@ class _AppTextInputState extends State<AppTextInput> {
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Allows for manual modification of the form state
       widget.controller?.addListener(() {
         String? value = widget.controller!.text;
         _formKey.currentState?.didChange(value);
@@ -118,10 +117,10 @@ class _AppTextInputState extends State<AppTextInput> {
         if (!_hasHadInput &&
             !formstate.hasError &&
             widget.shouldDisplaySuccess) {
-          defaultBorderColor = colors(context).successColor;
-          trailingWidget = Icon(
+          defaultBorderColor = ThemeColors.primaryColor;
+          trailingWidget = const Icon(
             Icons.check,
-            color: colors(context).successColor,
+            color: ThemeColors.primaryColor,
             size: Dimens.marginSmall,
           );
         }
@@ -143,7 +142,7 @@ class _AppTextInputState extends State<AppTextInput> {
                 ),
                 border: Border.all(
                   color: formstate.errorText != null
-                      ? colors(context).errorColor ?? borderColour
+                      ? ThemeColors.red
                       : defaultBorderColor ?? borderColour,
                   width: 0.7,
                   style: BorderStyle.solid,
@@ -219,7 +218,7 @@ class _AppTextInputState extends State<AppTextInput> {
                             textAlign: TextAlign.start,
                             style:
                                 Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: colors(context).errorColor,
+                                      color: ThemeColors.red,
                                     ),
                           ),
                         ),

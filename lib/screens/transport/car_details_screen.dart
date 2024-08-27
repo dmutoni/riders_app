@@ -1,13 +1,14 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_starter_template/data/models/car_model.dart';
-import 'package:flutter_starter_template/enums/widget_configurations/app_button_variant.dart';
-import 'package:flutter_starter_template/values/colors.dart';
-import 'package:flutter_starter_template/values/dimens.dart';
-import 'package:flutter_starter_template/widgets/common/input/app_button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intersperse/intersperse.dart';
+import 'package:riders_app/data/models/car_model.dart';
+import 'package:riders_app/enums/widget_configurations/app_button_variant.dart';
+import 'package:riders_app/screens/transport/request_for_rent_screen.dart';
+import 'package:riders_app/values/colors.dart';
+import 'package:riders_app/values/dimens.dart';
+import 'package:riders_app/widgets/common/input/app_button.dart';
 
 class CarDetailsScreen extends ConsumerWidget {
   static const String routeName = '/car-details';
@@ -22,7 +23,6 @@ class CarDetailsScreen extends ConsumerWidget {
       extendBody: true,
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
-        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: Padding(
           padding: const EdgeInsets.all(
@@ -190,7 +190,9 @@ class CarDetailsScreen extends ConsumerWidget {
                   Expanded(
                     child: AppButton(
                       onTap: () {
-                        // context.go('/select-transport');
+                        context.pushNamed(
+                          RequestForRentScreen.routeName,
+                        );
                       },
                       title: 'Book later',
                       variant: AppButtonVariant.light,
@@ -202,7 +204,10 @@ class CarDetailsScreen extends ConsumerWidget {
                   Expanded(
                     child: AppButton(
                       onTap: () {
-                        // context.go('/select-transport');
+                        context.pushNamed(
+                          RequestForRentScreen.routeName,
+                          extra: carModel,
+                        );
                       },
                       title: 'Ride Now',
                     ),

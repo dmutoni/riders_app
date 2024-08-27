@@ -1,86 +1,49 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_starter_template/data/models/car_model.dart';
-import 'package:flutter_starter_template/enums/widget_configurations/app_button_variant.dart';
-import 'package:flutter_starter_template/screens/transport/car_details_screen.dart';
-import 'package:flutter_starter_template/values/assets/transport_assets.dart';
-import 'package:flutter_starter_template/values/colors.dart';
-import 'package:flutter_starter_template/values/dimens.dart';
-import 'package:flutter_starter_template/widgets/common/input/app_button.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riders_app/data/models/car_model.dart';
+import 'package:riders_app/enums/widget_configurations/app_button_variant.dart';
+import 'package:riders_app/helpers/secure_storage_service_helper.dart';
+import 'package:riders_app/screens/transport/car_details_screen.dart';
+import 'package:riders_app/values/colors.dart';
+import 'package:riders_app/values/dimens.dart';
+import 'package:riders_app/widgets/common/input/app_button.dart';
 
-class AvailableCarsScreen extends ConsumerWidget {
+class AvailableCarsScreen extends StatefulWidget {
   static const String routeName = '/available-cars';
 
   const AvailableCarsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final List<CarModel> availableCars = [
-      const CarModel(
-        name: 'Toyota Corolla',
-        color: 'Black',
-        fuelType: 'Petrol',
-        gearType: 'Automatic',
-        model: '2021',
-        capacity: '1500cc',
-        maxPower: '97bhp',
-        fuel: '17.8kmpl',
-        maxSpeed: '180kmph',
-        speed60Mph: '10.5sec',
-        numberOfSeats: 5,
-        imageUrls: [
-          TransportAssets.availableCar,
-          TransportAssets.availableCar2,
-        ],
-        rate: '4.9',
-        reviews: '1000',
-      ),
-      const CarModel(
-        name: 'Toyota Corolla',
-        color: 'Black',
-        fuelType: 'Petrol',
-        gearType: 'Automatic',
-        model: '2021',
-        capacity: '1500cc',
-        maxPower: '97bhp',
-        fuel: '17.8kmpl',
-        maxSpeed: '180kmph',
-        speed60Mph: '10.5sec',
-        numberOfSeats: 5,
-        imageUrls: [
-          TransportAssets.availableCar,
-          TransportAssets.availableCar2,
-        ],
-        rate: '4.9',
-        reviews: '1000',
-      ),
-      const CarModel(
-        name: 'Toyota Corolla',
-        color: 'Black',
-        fuelType: 'Petrol',
-        gearType: 'Automatic',
-        model: '2021',
-        capacity: '1500cc',
-        maxPower: '97bhp',
-        fuel: '17.8kmpl',
-        maxSpeed: '180kmph',
-        speed60Mph: '10.5sec',
-        numberOfSeats: 5,
-        imageUrls: [
-          TransportAssets.availableCar,
-          TransportAssets.availableCar2,
-        ],
-        rate: '4.9',
-        reviews: '1000',
-      ),
-    ];
+  State<AvailableCarsScreen> createState() => _AvailableCarsScreenState();
+}
 
+class _AvailableCarsScreenState extends State<AvailableCarsScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getAvailableCars();
+    });
+  }
+
+  List<CarModel> availableCars = [];
+
+  void getAvailableCars() async {
+    final secureStorageServiceHelper = SecureStorageServiceHelper();
+
+    await secureStorageServiceHelper.saveCarDetails();
+
+    availableCars = await secureStorageServiceHelper.getCarDetails();
+
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
-        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: Padding(
           padding: const EdgeInsets.all(
@@ -147,6 +110,10 @@ class AvailableCarsScreen extends ConsumerWidget {
                           ? '${option.gearType} | ${option.numberOfSeats} seats | ${option.color}  '
                           : '',
                       location: option.location,
+                      onTap: () => context.pushNamed(
+                        CarDetailsScreen.routeName,
+                        extra: option,
+                      ),
                     ),
                   );
                 },
@@ -164,6 +131,7 @@ class AvailableCarsScreen extends ConsumerWidget {
     String? carDetails,
     String? location,
     required BuildContext context,
+    VoidCallback? onTap,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -204,14 +172,18 @@ class AvailableCarsScreen extends ConsumerWidget {
                 child: AppButton(
                   variant: AppButtonVariant.light,
                   title: 'Book Later',
-                  onTap: () {},
+                  onTap: () {
+                    onTap?.call();
+                  },
                 ),
               ),
               const SizedBox(width: 8.0),
               Expanded(
                 child: AppButton(
                   title: 'Ride Now',
-                  onTap: () {},
+                  onTap: () {
+                    onTap?.call();
+                  },
                 ),
               ),
             ],

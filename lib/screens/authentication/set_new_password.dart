@@ -1,16 +1,16 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_starter_template/enums/widget_configurations/app_button_variant.dart';
-import 'package:flutter_starter_template/enums/widget_configurations/app_top_snackbar_level.dart';
-import 'package:flutter_starter_template/enums/widget_configurations/app_top_snackbar_variant.dart';
-import 'package:flutter_starter_template/helpers/snackbar_helper.dart';
-import 'package:flutter_starter_template/repository/auth_repository.dart';
-import 'package:flutter_starter_template/screens/authentication/login_screen.dart';
-import 'package:flutter_starter_template/values/colors.dart';
-import 'package:flutter_starter_template/widgets/common/input/app_text_input.dart';
-import 'package:flutter_starter_template/widgets/common/input/app_button.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riders_app/enums/widget_configurations/app_button_variant.dart';
+import 'package:riders_app/enums/widget_configurations/app_top_snackbar_level.dart';
+import 'package:riders_app/enums/widget_configurations/app_top_snackbar_variant.dart';
+import 'package:riders_app/helpers/secure_storage_service_helper.dart';
+import 'package:riders_app/helpers/snackbar_helper.dart';
+import 'package:riders_app/screens/authentication/login_screen.dart';
+import 'package:riders_app/values/colors.dart';
+import 'package:riders_app/widgets/common/input/app_button.dart';
+import 'package:riders_app/widgets/common/input/app_text_input.dart';
 
 class SetNewPassword extends ConsumerStatefulWidget {
   static const String routeName = '/setNewPassword';
@@ -25,11 +25,14 @@ class SetNewPassword extends ConsumerStatefulWidget {
 
 class _SetNewPasswordState extends ConsumerState<SetNewPassword> {
   final TextEditingController _passwordController = TextEditingController();
+
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool _isShowingPassword = true;
+  bool _isShowingConfirmPassword = true;
 
   @override
   void dispose() {
@@ -40,11 +43,8 @@ class _SetNewPasswordState extends ConsumerState<SetNewPassword> {
 
   @override
   Widget build(BuildContext context) {
-    var auth = ref.watch(authenticationProvider);
-
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
         leading: Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: GestureDetector(
@@ -68,7 +68,6 @@ class _SetNewPasswordState extends ConsumerState<SetNewPassword> {
         leadingWidth: 100,
       ),
       body: SafeArea(
-        bottom: true,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Form(
@@ -89,6 +88,7 @@ class _SetNewPasswordState extends ConsumerState<SetNewPassword> {
                       ),
                       const SizedBox(height: 20),
                       AppTextInput(
+                        obscureText: !_isShowingPassword,
                         controller: _passwordController,
                         trailingWidgetOverride: IconButton(
                           onPressed: () => setState(
@@ -120,11 +120,13 @@ class _SetNewPasswordState extends ConsumerState<SetNewPassword> {
                       const SizedBox(height: 10),
                       AppTextInput(
                         controller: _confirmPasswordController,
+                        obscureText: !_isShowingConfirmPassword,
                         trailingWidgetOverride: IconButton(
                           onPressed: () => setState(
-                            () => _isShowingPassword = !_isShowingPassword,
+                            () => _isShowingConfirmPassword =
+                                !_isShowingConfirmPassword,
                           ),
-                          icon: _isShowingPassword
+                          icon: _isShowingConfirmPassword
                               ? const Icon(
                                   Icons.visibility_outlined,
                                 )
@@ -153,29 +155,16 @@ class _SetNewPasswordState extends ConsumerState<SetNewPassword> {
                 ),
                 AppButton(
                   title: 'Save',
-                  isLoading: auth.isLoading,
                   onTap: () async {
                     if (!_formKey.currentState!.validate()) return;
                     try {
-                      context.go(LoginScreen.routeName);
-                      // await ref
-                      //     .read(authenticationProvider.notifier)
-                      //     .signInWithEmailAndPassword(
-                      //         email: _emailController.text,
-                      //         password: _passwordController.text);
-                    } on FirebaseAuthException catch (e) {
-                      Map<String, String> errorMessages = {
-                        'INVALID_LOGIN_CREDENTIALS': 'Invalid credentials',
-                        'USER_DISABLED': 'User is disabled',
-                        'INVALID_EMAIL': 'Invalid email',
-                        'INVALID_PASSWORD': 'Invalid password',
-                      };
+                      SecureStorageServiceHelper()
+                          .setPassword(password: _passwordController.text);
 
-                      String message =
-                          errorMessages[e.code] ?? 'Something went wrong';
-
+                      context.pushNamed(LoginScreen.routeName);
+                    } catch (e) {
                       SnackbarHelper.showSnackbar(
-                        message: message,
+                        message: 'An error occurred',
                         level: AppTopSnackbarLevel.alert,
                         variant: AppTopSnackbarVariant.error,
                         context: context,
@@ -183,10 +172,6 @@ class _SetNewPasswordState extends ConsumerState<SetNewPassword> {
                     }
                   },
                   variant: AppButtonVariant.dark,
-                  actionIcon: const Icon(
-                    Icons.arrow_right_alt,
-                    color: ThemeColors.white,
-                  ),
                 ),
               ],
             ),

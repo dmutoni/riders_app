@@ -35,6 +35,8 @@ mixin _$CarModel {
   String? get location => throw _privateConstructorUsedError;
   String? get rate => throw _privateConstructorUsedError;
   String? get reviews => throw _privateConstructorUsedError;
+  String? get pricePerHours => throw _privateConstructorUsedError;
+  String? get tax => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -62,7 +64,9 @@ abstract class $CarModelCopyWith<$Res> {
       List<String>? imageUrls,
       String? location,
       String? rate,
-      String? reviews});
+      String? reviews,
+      String? pricePerHours,
+      String? tax});
 }
 
 /// @nodoc
@@ -93,6 +97,8 @@ class _$CarModelCopyWithImpl<$Res, $Val extends CarModel>
     Object? location = freezed,
     Object? rate = freezed,
     Object? reviews = freezed,
+    Object? pricePerHours = freezed,
+    Object? tax = freezed,
   }) {
     return _then(_value.copyWith(
       name: freezed == name
@@ -155,6 +161,14 @@ class _$CarModelCopyWithImpl<$Res, $Val extends CarModel>
           ? _value.reviews
           : reviews // ignore: cast_nullable_to_non_nullable
               as String?,
+      pricePerHours: freezed == pricePerHours
+          ? _value.pricePerHours
+          : pricePerHours // ignore: cast_nullable_to_non_nullable
+              as String?,
+      tax: freezed == tax
+          ? _value.tax
+          : tax // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -182,7 +196,9 @@ abstract class _$$CarModelImplCopyWith<$Res>
       List<String>? imageUrls,
       String? location,
       String? rate,
-      String? reviews});
+      String? reviews,
+      String? pricePerHours,
+      String? tax});
 }
 
 /// @nodoc
@@ -211,6 +227,8 @@ class __$$CarModelImplCopyWithImpl<$Res>
     Object? location = freezed,
     Object? rate = freezed,
     Object? reviews = freezed,
+    Object? pricePerHours = freezed,
+    Object? tax = freezed,
   }) {
     return _then(_$CarModelImpl(
       name: freezed == name
@@ -273,6 +291,14 @@ class __$$CarModelImplCopyWithImpl<$Res>
           ? _value.reviews
           : reviews // ignore: cast_nullable_to_non_nullable
               as String?,
+      pricePerHours: freezed == pricePerHours
+          ? _value.pricePerHours
+          : pricePerHours // ignore: cast_nullable_to_non_nullable
+              as String?,
+      tax: freezed == tax
+          ? _value.tax
+          : tax // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -295,7 +321,9 @@ class _$CarModelImpl implements _CarModel {
       final List<String>? imageUrls,
       this.location,
       this.rate,
-      this.reviews})
+      this.reviews,
+      this.pricePerHours,
+      this.tax})
       : _imageUrls = imageUrls;
 
   factory _$CarModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -339,10 +367,14 @@ class _$CarModelImpl implements _CarModel {
   final String? rate;
   @override
   final String? reviews;
+  @override
+  final String? pricePerHours;
+  @override
+  final String? tax;
 
   @override
   String toString() {
-    return 'CarModel(name: $name, color: $color, fuelType: $fuelType, gearType: $gearType, model: $model, capacity: $capacity, maxPower: $maxPower, fuel: $fuel, maxSpeed: $maxSpeed, speed60Mph: $speed60Mph, numberOfSeats: $numberOfSeats, imageUrls: $imageUrls, location: $location, rate: $rate, reviews: $reviews)';
+    return 'CarModel(name: $name, color: $color, fuelType: $fuelType, gearType: $gearType, model: $model, capacity: $capacity, maxPower: $maxPower, fuel: $fuel, maxSpeed: $maxSpeed, speed60Mph: $speed60Mph, numberOfSeats: $numberOfSeats, imageUrls: $imageUrls, location: $location, rate: $rate, reviews: $reviews, pricePerHours: $pricePerHours, tax: $tax)';
   }
 
   @override
@@ -373,7 +405,10 @@ class _$CarModelImpl implements _CarModel {
             (identical(other.location, location) ||
                 other.location == location) &&
             (identical(other.rate, rate) || other.rate == rate) &&
-            (identical(other.reviews, reviews) || other.reviews == reviews));
+            (identical(other.reviews, reviews) || other.reviews == reviews) &&
+            (identical(other.pricePerHours, pricePerHours) ||
+                other.pricePerHours == pricePerHours) &&
+            (identical(other.tax, tax) || other.tax == tax));
   }
 
   @JsonKey(ignore: true)
@@ -394,7 +429,9 @@ class _$CarModelImpl implements _CarModel {
       const DeepCollectionEquality().hash(_imageUrls),
       location,
       rate,
-      reviews);
+      reviews,
+      pricePerHours,
+      tax);
 
   @JsonKey(ignore: true)
   @override
@@ -426,7 +463,9 @@ abstract class _CarModel implements CarModel {
       final List<String>? imageUrls,
       final String? location,
       final String? rate,
-      final String? reviews}) = _$CarModelImpl;
+      final String? reviews,
+      final String? pricePerHours,
+      final String? tax}) = _$CarModelImpl;
 
   factory _CarModel.fromJson(Map<String, dynamic> json) =
       _$CarModelImpl.fromJson;
@@ -461,6 +500,10 @@ abstract class _CarModel implements CarModel {
   String? get rate;
   @override
   String? get reviews;
+  @override
+  String? get pricePerHours;
+  @override
+  String? get tax;
   @override
   @JsonKey(ignore: true)
   _$$CarModelImplCopyWith<_$CarModelImpl> get copyWith =>

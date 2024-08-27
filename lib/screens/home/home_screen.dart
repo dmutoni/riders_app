@@ -1,17 +1,18 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_starter_template/enums/widget_configurations/app_input_variant.dart';
-import 'package:flutter_starter_template/theme/styles.dart';
-import 'package:flutter_starter_template/values/assets/home_assets.dart';
-import 'package:flutter_starter_template/values/colors.dart';
-import 'package:flutter_starter_template/values/dimens.dart';
-import 'package:flutter_starter_template/widgets/common/input/app_button.dart';
-import 'package:flutter_starter_template/widgets/common/input/app_text_input.dart';
-import 'package:flutter_starter_template/widgets/common/visual/address_bottom_sheet.dart';
-import 'package:flutter_starter_template/widgets/common/visual/tab_item.dart';
+
+import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:riders_app/enums/widget_configurations/app_input_variant.dart';
+import 'package:riders_app/helpers/secure_storage_service_helper.dart';
+import 'package:riders_app/screens/authentication/welcome_screen.dart';
+import 'package:riders_app/values/assets/home_assets.dart';
+import 'package:riders_app/values/colors.dart';
+import 'package:riders_app/values/dimens.dart';
+import 'package:riders_app/widgets/common/input/app_button.dart';
+import 'package:riders_app/widgets/common/input/app_text_input.dart';
+import 'package:riders_app/widgets/common/visual/address_bottom_sheet.dart';
+import 'package:riders_app/widgets/common/visual/hexagonal_painter.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/homeScreen';
@@ -23,24 +24,10 @@ class HomeScreen extends StatefulWidget {
 
 class _MyHomePageState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  int _bottomNavigationBarIndex = 0;
 
   final Location locationController = Location();
 
   LatLng? currentPosition;
-
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text('Index 0: Home', style: optionStyle),
-    Text('Index 1: Business', style: optionStyle),
-    Text('Index 2: School', style: optionStyle),
-    Text('Index 3: About Us', style: optionStyle), // Added
-    Text('Index 4: Settings', style: optionStyle), // Added
-    Text('Index 5: Help and Support', style: optionStyle), // Added
-    Text('Index 6: Logout', style: optionStyle), // Added
-  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -48,14 +35,8 @@ class _MyHomePageState extends State<HomeScreen> {
     });
   }
 
-  void _onItemTappedOnBottomNavigationBar(int index) {
-    setState(() {
-      _bottomNavigationBarIndex = index;
-    });
-  }
-
-  static const googlePlex = LatLng(37.785831, -122.0848);
-  static const mountainView = LatLng(37.785840, -122.0839);
+  static const googlePlex = LatLng(-1.9515333, 30.1146561);
+  static const mountainView = LatLng(-1.9515333, 30.1146561);
 
   int selectedIndex = 0;
 
@@ -65,6 +46,7 @@ class _MyHomePageState extends State<HomeScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await fetchLocationUpdates();
+      getUserDetails();
     });
   }
 
@@ -78,12 +60,25 @@ class _MyHomePageState extends State<HomeScreen> {
     super.dispose();
   }
 
+  String? email;
+  String? username;
+
+  void getUserDetails() async {
+    final SecureStorageServiceHelper secureStorageHelper =
+        SecureStorageServiceHelper();
+
+    email = await secureStorageHelper.email;
+    username = await secureStorageHelper.name;
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
       appBar: AppBar(
-        title: const Text('DA'),
+        title: const Text('Welcome'),
         leading: Builder(
           builder: (context) {
             return IconButton(
@@ -161,10 +156,10 @@ class _MyHomePageState extends State<HomeScreen> {
                     ),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: ThemeColors.green5, // Background color
+                        color: ThemeColors.green5,
                         borderRadius: BorderRadius.circular(Dimens.marginSmall),
                         border: Border.all(
-                          color: ThemeColors.green, // Border color
+                          color: ThemeColors.green,
                         ),
                       ),
                       child: Row(
@@ -189,7 +184,7 @@ class _MyHomePageState extends State<HomeScreen> {
           bottomRight: Radius.circular(70),
         ),
         child: Container(
-          width: MediaQuery.of(context).size.width * 0.60, // Adjusts the width
+          width: MediaQuery.of(context).size.width * 0.60,
           color: ThemeColors.white,
           child: ListView(
             padding: EdgeInsets.zero,
@@ -214,21 +209,14 @@ class _MyHomePageState extends State<HomeScreen> {
                   ],
                 ),
               ),
-              Container(
-                width: 100, // Equal width and height for a perfect circle
-                height: 100,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle, // Circular shape for the container
-                  border: Border.all(
-                    color: ThemeColors.green, // Green border color
-                    width: 2,
-                  ),
-                ),
-                child: ClipOval(
-                  child: Image.asset(
-                    HomeAssets.avatar,
-                    fit: BoxFit
-                        .cover, // Ensures the image fills the circular area
+              Padding(
+                padding: const EdgeInsets.only(left: Dimens.marginDefault),
+                child: Container(
+                  alignment: Alignment.topLeft,
+                  child: ClipOval(
+                    child: Image.asset(
+                      HomeAssets.avatar,
+                    ),
                   ),
                 ),
               ),
@@ -239,11 +227,11 @@ class _MyHomePageState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Nate Samson',
+                      username ?? '',
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     Text(
-                      'note@email.com',
+                      email ?? '',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: ThemeColors.black,
                           ),
@@ -310,8 +298,9 @@ class _MyHomePageState extends State<HomeScreen> {
                 title: const Text('Logout'),
                 selected: _selectedIndex == 6,
                 onTap: () {
-                  _onItemTapped(6);
-                  Navigator.pop(context);
+                  // _onItemTapped(6);
+
+                  context.pushNamed(WelcomeScreen.routeName);
                 },
               ),
             ],
@@ -341,8 +330,7 @@ class _MyHomePageState extends State<HomeScreen> {
                 label: 'Favourite',
               ),
               BottomNavigationBarItem(
-                icon: Icon(
-                    Icons.favorite_border), // Empty space for the custom icon
+                icon: Icon(Icons.favorite_border),
                 label: 'Wallet',
               ),
               BottomNavigationBarItem(
@@ -410,10 +398,8 @@ class _MyHomePageState extends State<HomeScreen> {
             currentLocation.longitude!,
           );
         });
-        print('Current Location: $currentPosition');
       }
     });
-    // Fetch location updates
   }
 
   Widget _buildTabButton(String text, int index, void Function()? onTap) {
@@ -467,29 +453,4 @@ class _MyHomePageState extends State<HomeScreen> {
       builder: (context) => const AddressBottomSheet(),
     );
   }
-}
-
-class HexagonPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final Paint paint = Paint()..color = ThemeColors.green;
-    final Path path = Path();
-
-    final double w = size.width;
-    final double h = size.height;
-    final double side = w / 2;
-
-    path.moveTo(w / 2, 0);
-    path.lineTo(w, h * 0.25);
-    path.lineTo(w, h * 0.75);
-    path.lineTo(w / 2, h);
-    path.lineTo(0, h * 0.75);
-    path.lineTo(0, h * 0.25);
-    path.close();
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }

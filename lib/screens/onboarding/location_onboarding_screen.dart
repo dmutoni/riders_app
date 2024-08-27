@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_starter_template/screens/onboarding/time_onboarding_screen.dart';
-import 'package:flutter_starter_template/values/assets/onboarding_assets.dart';
-import 'package:flutter_starter_template/widgets/onboarding/onboarding_template.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riders_app/screens/onboarding/time_onboarding_screen.dart';
+import 'package:riders_app/values/assets/onboarding_assets.dart';
+import 'package:riders_app/widgets/onboarding/onboarding_template.dart';
 
 class LocationOnboardingScreen extends ConsumerWidget {
   static const String routeName = '/';

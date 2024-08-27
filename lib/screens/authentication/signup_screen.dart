@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_starter_template/enums/widget_configurations/app_button_variant.dart';
-import 'package:flutter_starter_template/helpers/email_validation_helper.dart';
-import 'package:flutter_starter_template/screens/authentication/login_screen.dart';
-import 'package:flutter_starter_template/screens/authentication/phone_verification_screen.dart';
-import 'package:flutter_starter_template/values/colors.dart';
-import 'package:flutter_starter_template/values/dimens.dart';
-import 'package:flutter_starter_template/widgets/common/input/app_text_input.dart';
-import 'package:flutter_starter_template/widgets/common/input/app_button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intersperse/intersperse.dart';
+import 'package:riders_app/data/providers/authentication/authentication_provider.dart';
+import 'package:riders_app/enums/widget_configurations/app_button_variant.dart';
+import 'package:riders_app/enums/widget_configurations/app_top_snackbar_level.dart';
+import 'package:riders_app/enums/widget_configurations/app_top_snackbar_variant.dart';
+import 'package:riders_app/helpers/email_validation_helper.dart';
+import 'package:riders_app/helpers/snackbar_helper.dart';
+import 'package:riders_app/screens/authentication/login_screen.dart';
+import 'package:riders_app/screens/authentication/phone_verification_screen.dart';
+import 'package:riders_app/values/colors.dart';
+import 'package:riders_app/values/dimens.dart';
+import 'package:riders_app/widgets/common/input/app_button.dart';
+import 'package:riders_app/widgets/common/input/app_text_input.dart';
+import 'package:riders_app/widgets/common/input/phone_text_input.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
   static const String routeName = '/signupScreen';
@@ -24,9 +29,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  final bool _isShowingPassword = true;
+  String? selectedGender;
 
   @override
   void dispose() {
@@ -103,6 +109,11 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 if (value == null || value.isEmpty) return 'Name is required';
                 return null;
               },
+              onChanged: (value) {
+                ref.read(authentionProvider.notifier).copyWith(
+                      name: value,
+                    );
+              },
               validateOnInput: true,
             ),
             AppTextInput(
@@ -113,87 +124,20 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 if (!isEmailValid(value)) return 'Email is invalid';
                 return null;
               },
-              validateOnInput: true,
-            ),
-            AppTextInput(
-              obscureText: _isShowingPassword,
-              controller: _passwordController,
-              label: 'Password',
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Password is required';
-                }
-                if (value.length < 6) {
-                  return 'Password must be at least 6 characters';
-                }
-                return null;
+              onChanged: (value) {
+                ref.read(authentionProvider.notifier).copyWith(
+                      email: value,
+                    );
               },
               validateOnInput: true,
             ),
-            _buildFullScreenDropdown(),
+            PhoneNumberInput(
+              phoneController: _phoneController,
+            ),
             _buildDropdownButtonFormField(),
           ],
         ),
       ],
-    );
-  }
-
-  Widget _buildFullScreenDropdown() {
-    final controller = TextEditingController();
-    String? selectedValue;
-    final options = ['Option 1', 'Option 2', 'Option 3'];
-
-    return TextFormField(
-      controller: controller,
-      readOnly: true,
-      decoration: InputDecoration(
-        labelText: 'Select an option',
-        suffixIcon: IconButton(
-          icon: const Icon(Icons.arrow_drop_down),
-          onPressed: () async {
-            final result = await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => FullScreenDropdown(
-                  options: options,
-                  selectedValue: selectedValue,
-                ),
-              ),
-            );
-            if (result != null) {
-              setState(() {
-                selectedValue = result;
-                controller.text = result;
-              });
-            }
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDropdownButtonFormField() {
-    String? selectedValue;
-
-    return DropdownButtonFormField<String>(
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-        ),
-        contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
-      ),
-      value: selectedValue,
-      items: ['Male', 'Female']
-          .map((option) => DropdownMenuItem(
-                value: option,
-                child: Text(option),
-              ))
-          .toList(),
-      onChanged: (value) {
-        setState(() {
-          selectedValue = value;
-        });
-      },
     );
   }
 
@@ -238,11 +182,26 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   Widget _buildSignUpButton(BuildContext context) {
     return AppButton(
       title: 'Sign up',
+      isLoading: ref.watch(authentionProvider).isSendingOtp ?? false,
       onTap: () async {
         if (_formKey.currentState?.validate() ?? false) {
           try {
+            await ref.read(authentionProvider.notifier).sendOtpToUser(
+                  _emailController.text,
+                );
+
+            ref.read(authentionProvider.notifier).copyWith(
+                  phoneNumber: _phoneController.text,
+                );
+
             context.pushNamed(PhoneVerificationScreen.routeName);
           } catch (e) {
+            SnackbarHelper.showSnackbar(
+              context: context,
+              message: 'Otp is invalid',
+              level: AppTopSnackbarLevel.warning,
+              variant: AppTopSnackbarVariant.error,
+            );
             return;
           }
         }
@@ -290,32 +249,39 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       ),
     );
   }
-}
 
-class FullScreenDropdown extends StatelessWidget {
-  final List<String> options;
-  final String? selectedValue;
-
-  const FullScreenDropdown(
-      {super.key, required this.options, this.selectedValue});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Select an Option'),
+  Widget _buildDropdownButtonFormField() {
+    return DropdownButtonFormField<String>(
+      dropdownColor: ThemeColors.white,
+      focusColor: ThemeColors.white,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      hint: const Text('Select gender'),
+      decoration: const InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(Dimens.marginSmall)),
+        ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
       ),
-      body: ListView.builder(
-        itemCount: options.length,
-        itemBuilder: (context, index) {
-          final option = options[index];
-          return ListTile(
-            title: Text(option),
-            selected: option == selectedValue,
-            onTap: () => Navigator.pop(context, option),
-          );
-        },
-      ),
+      value: selectedGender,
+      items: ['Male', 'Female']
+          .map((option) => DropdownMenuItem(
+                value: option,
+                child: Text(option),
+              ))
+          .toList(),
+      onChanged: (value) {
+        setState(() {
+          selectedGender = value;
+        });
+
+        ref.read(authentionProvider.notifier).copyWith(
+              gender: value,
+            );
+      },
+      validator: (value) {
+        if (value == null) return 'Gender is required';
+        return null;
+      },
     );
   }
 }

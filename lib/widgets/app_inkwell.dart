@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_starter_template/helpers/tap_protection_helper.dart';
+import 'package:riders_app/helpers/tap_protection_helper.dart';
 
 class AppProtectedInkWell {
   /// Creates an instance of InkWell
@@ -27,7 +27,7 @@ class AppProtectedInkWell {
     Color? focusColor,
     Color? hoverColor,
     Color? highlightColor,
-    MaterialStateProperty<Color?>? overlayColor,
+    WidgetStateProperty<Color?>? overlayColor,
     Color? splashColor,
     InteractiveInkFeatureFactory? splashFactory,
     double? radius,

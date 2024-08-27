@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_starter_template/screens/transport/available_cars_screen.dart';
-import 'package:flutter_starter_template/values/assets/transport_assets.dart';
-import 'package:flutter_starter_template/values/dimens.dart';
-import 'package:flutter_starter_template/widgets/common/visual/option_item.dart';
 import 'package:go_router/go_router.dart';
+import 'package:riders_app/data/models/transport_type_model.dart';
+import 'package:riders_app/helpers/secure_storage_service_helper.dart';
+import 'package:riders_app/screens/transport/available_cars_screen.dart';
+import 'package:riders_app/values/dimens.dart';
+import 'package:riders_app/widgets/common/visual/option_item.dart';
 
 class SelectTransportScreen extends StatefulWidget {
   static const routeName = '/select-transport';
@@ -16,42 +17,31 @@ class SelectTransportScreen extends StatefulWidget {
 class _SelectTransportScreenState extends State<SelectTransportScreen> {
   int selectedTransport = 0;
 
-  final List<Map<String, dynamic>> transportOptions = [
-    {
-      'label': 'Car',
-      'icon': Image.asset(
-        TransportAssets.car,
-      ),
-      'color': Colors.red
-    },
-    {
-      'label': 'Bike',
-      'icon': Image.asset(
-        TransportAssets.bike,
-      ),
-      'color': Colors.yellow
-    },
-    {
-      'label': 'Cycle',
-      'icon': Image.asset(
-        TransportAssets.cycle,
-      ),
-      'color': Colors.black
-    },
-    {
-      'label': 'Taxi',
-      'icon': Image.asset(
-        TransportAssets.taxi,
-      ),
-      'color': Colors.yellow
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getTransportOptions();
+    });
+  }
+
+  List<TransportTypeModel> transportOptions = [];
+
+  void getTransportOptions() async {
+    final secureStorageServiceHelper = SecureStorageServiceHelper();
+
+    await secureStorageServiceHelper.saveTransportDetails();
+
+    transportOptions = await secureStorageServiceHelper.getTransportTypes();
+
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         leading: Padding(
           padding: const EdgeInsets.all(
@@ -104,8 +94,10 @@ class _SelectTransportScreenState extends State<SelectTransportScreen> {
                       selectedTransport == transportOptions.indexOf(option);
 
                   return OptionItem(
-                    label: option['label'],
-                    image: option['icon'],
+                    label: option.label ?? '',
+                    image: Image.asset(
+                      option.icon ?? '',
+                    ),
                     isSelected: isSelected,
                     onTap: () {
                       setState(() {

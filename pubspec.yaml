@@ -1,4 +1,4 @@
-name: flutter_starter_template
+name: riders_app
 description: A new Flutter project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -30,10 +30,8 @@ dependencies:
     sdk: flutter
   intl: any
   shared_preferences: ^2.2.2
-  firebase_core: ^2.24.2
   animated_size_and_fade: ^3.0.1
   flutter_svg: ^2.0.9
-  firebase_auth: ^4.16.0
   equatable: ^2.0.5
   intersperse: ^2.0.0
   google_sign_in: ^6.1.6
@@ -46,6 +44,9 @@ dependencies:
   freezed_annotation: ^2.4.4
   json_annotation: ^4.9.0
   carousel_slider: ^5.0.0
+  flutter_secure_storage: ^9.2.2
+  mailer: ^6.1.2
+  mocktail: ^1.0.4
 
 dev_dependencies:
   flutter_test:

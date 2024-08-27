@@ -1,38 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_starter_template/helpers/go_router_navigation_helper.dart';
-import 'package:flutter_starter_template/language_constants.dart';
-import 'package:flutter_starter_template/localisations/cupertino_localisations_rw.dart';
-import 'package:flutter_starter_template/localisations/material_localisations_rw.dart';
-import 'package:flutter_starter_template/theme/theme_constants.dart';
-import 'package:flutter_starter_template/theme/theme_manager.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
+import 'package:riders_app/helpers/go_router_navigation_helper.dart';
+import 'package:riders_app/helpers/secure_storage_service_helper.dart';
+import 'package:riders_app/language_constants.dart';
+import 'package:riders_app/localisations/cupertino_localisations_rw.dart';
+import 'package:riders_app/localisations/material_localisations_rw.dart';
+import 'package:riders_app/screens/authentication/welcome_screen.dart';
+import 'package:riders_app/screens/onboarding/location_onboarding_screen.dart';
+import 'package:riders_app/theme/theme_constants.dart';
+import 'package:riders_app/theme/theme_manager.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(const ProviderScope(child: RidersApp()));
 }
 
-class MyApp extends ConsumerStatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+class RidersApp extends ConsumerStatefulWidget {
+  const RidersApp({Key? key}) : super(key: key);
 
   static void setLocale(BuildContext context, Locale newLocale) {
-    _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
+    _RidersAppState? state = context.findAncestorStateOfType<_RidersAppState>();
     state?.setLocale(newLocale);
   }
 
   @override
-  ConsumerState<MyApp> createState() => _MyAppState();
+  ConsumerState<RidersApp> createState() => _RidersAppState();
 }
 
-class _MyAppState extends ConsumerState<MyApp> {
+class _RidersAppState extends ConsumerState<RidersApp> {
   Locale? _locale;
 
   setLocale(Locale locale) {
@@ -53,12 +51,10 @@ class _MyAppState extends ConsumerState<MyApp> {
     final router = ref.watch(routerProvider);
 
     return MaterialApp.router(
-      title: 'Flutter starter template',
+      routerConfig: router,
+      title: 'Rider\'s app',
       debugShowCheckedModeBanner: false,
       theme: getAppTheme(context: context, isDarkTheme: themeMode),
-      routeInformationParser: router.routeInformationParser,
-      routerDelegate: router.routerDelegate,
-      routeInformationProvider: router.routeInformationProvider,
       localizationsDelegates: const [
         ...AppLocalizations.localizationsDelegates,
         MaterialLocalizationsRw.delegate,
@@ -66,6 +62,52 @@ class _MyAppState extends ConsumerState<MyApp> {
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       locale: _locale,
+    );
+  }
+}
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _navigateBasedOnOnboarding();
+    });
+  }
+
+  Future<void> _navigateBasedOnOnboarding() async {
+    try {
+      final isOnboarded = await SecureStorageServiceHelper().isOnboarded;
+
+      if (isOnboarded) {
+        _navigateToHome();
+      } else {
+        _navigateToOnboarding();
+      }
+    } catch (e) {
+      print('Error during onboarding check: $e');
+    }
+  }
+
+  void _navigateToHome() {
+    context.pushNamed(WelcomeScreen.routeName);
+  }
+
+  void _navigateToOnboarding() {
+    context.pushNamed(LocationOnboardingScreen.routeName);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(child: CircularProgressIndicator()),
     );
   }
 }

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_starter_template/enums/widget_configurations/app_top_snackbar_level.dart';
-import 'package:flutter_starter_template/enums/widget_configurations/app_top_snackbar_variant.dart';
-import 'package:flutter_starter_template/values/durations.dart';
-import 'package:flutter_starter_template/widgets/common/visual/app_top_snackbar.dart';
+import 'package:riders_app/enums/widget_configurations/app_top_snackbar_level.dart';
+import 'package:riders_app/enums/widget_configurations/app_top_snackbar_variant.dart';
+import 'package:riders_app/widgets/common/visual/app_top_snackbar.dart';
 
 OverlayEntry? _currentEntry;
 List<OverlayEntry> _queue = [];

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_starter_template/screens/transport/select_transport_screen.dart';
-import 'package:flutter_starter_template/values/colors.dart';
-import 'package:flutter_starter_template/values/dimens.dart';
-import 'package:flutter_starter_template/widgets/common/input/app_button.dart';
-import 'package:flutter_starter_template/widgets/common/visual/dotted_line.dart';
 import 'package:go_router/go_router.dart';
+import 'package:riders_app/screens/transport/select_transport_screen.dart';
+import 'package:riders_app/values/colors.dart';
+import 'package:riders_app/values/dimens.dart';
+import 'package:riders_app/widgets/common/input/app_button.dart';
+import 'package:riders_app/widgets/common/visual/location_details.dart';
 
 class ConfirmAddressBottomSheet extends StatelessWidget {
   const ConfirmAddressBottomSheet({Key? key}) : super(key: key);
@@ -45,74 +45,12 @@ class ConfirmAddressBottomSheet extends StatelessWidget {
             const SizedBox(height: 16.0),
             const Divider(height: 1, color: Colors.grey),
             const SizedBox(height: 16.0),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Column(
-                  children: [
-                    Icon(Icons.location_on, color: ThemeColors.red),
-                    SizedBox(
-                      height: 60,
-                      child: DottedLine(
-                        color: ThemeColors.green,
-                        direction: Axis.vertical,
-                        height: 2,
-                        width: 2,
-                      ),
-                    ),
-                    Icon(Icons.place, color: ThemeColors.green),
-                  ],
-                ),
-                const SizedBox(width: 8.0),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Current location',
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                      const SizedBox(height: 4.0),
-                      Text(
-                        '2972 Westheimer Rd. Santa Ana, Illinois 85486',
-                        style: Theme.of(context).textTheme.bodySmall,
-                        overflow: TextOverflow.visible,
-                      ),
-                      const SizedBox(height: 16.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            width: 250,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Office',
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                                const SizedBox(height: 4.0),
-                                Text(
-                                  '1901 Thornridge Cir. Shiloh, Hawaii 81063',
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                  overflow: TextOverflow.visible,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Text('1.1km',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  )),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+            const LocationDetails(
+              fromAddress: 'Current Location',
+              fromDetails: '2972 Westheimer Rd. Santa Ana, Illinois 85486 ',
+              toAddress: 'Office',
+              toDetails: '1901 Thornridge Cir. Shiloh, Hawaii 81063',
+              distance: '1.1 KM',
             ),
             const SizedBox(height: 16.0),
             AppButton(

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_starter_template/values/colors.dart';
-import 'package:flutter_starter_template/values/dimens.dart';
-import 'package:flutter_starter_template/widgets/onboarding/onboarding_progress_indicator.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riders_app/values/colors.dart';
+import 'package:riders_app/values/dimens.dart';
+import 'package:riders_app/widgets/onboarding/onboarding_progress_indicator.dart';
 
 class OnboardingTemplate extends ConsumerWidget {
   final String? appBarTitle;
@@ -38,7 +38,6 @@ class OnboardingTemplate extends ConsumerWidget {
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.transparent,
       actions: [
         if (appBarTitle != null)
           Padding(

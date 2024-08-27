@@ -1,16 +1,9 @@
-# flutter_starter_template
+# Riders application
 
-A new Flutter project.
+Welcome to the Rider's Application, a comprehensive mobile app designed to provide an easy and efficient way for users to book rides, manage their trips, and track their rides in real-time. This README file will guide you through the features, installation process, and provide a visual overview of the app.
 
-## Getting Started
+## Feautures 
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
